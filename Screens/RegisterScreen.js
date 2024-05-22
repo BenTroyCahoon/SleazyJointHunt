@@ -1,21 +1,26 @@
 import React from "react";
 import { StyleSheet, Text, View, Button, TextInput } from "react-native";
 
-const LoginScreen = ({ navigation }) => {
+const RegisterScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Register</Text>
       <TextInput style={styles.input} placeholder="Username" />
       <TextInput style={styles.input} placeholder="Password" secureTextEntry />
-      <Button
-        title="Login"
-        onPress={() => {
-          /* Implement login logic */
-        }}
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm Password"
+        secureTextEntry
       />
       <Button
         title="Register"
-        onPress={() => navigation.navigate("Register")}
+        onPress={() => {
+          /* Implement registration logic */
+        }}
+      />
+      <Button
+        title="Back to Login"
+        onPress={() => navigation.navigate("Login")}
       />
     </View>
   );
@@ -41,4 +46,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;
