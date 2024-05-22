@@ -10,7 +10,6 @@ const LoginScreen = ({ navigation }) => {
       <Button
         title="Login"
         onPress={() => {
-          /* Implement login logic */
         }}
       />
       <Button
