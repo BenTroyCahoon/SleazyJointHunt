@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, Text, View, Button, TextInput } from "react-native";
+import { StyleSheet, Text, View, Button, ScrollView } from "react-native";
+
 
 const LoginScreen = ({ navigation }) => {
   return (
