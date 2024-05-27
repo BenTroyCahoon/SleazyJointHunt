@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const rootUrl =
-  "https://sleazyjointhunt-default-rtdb.europe-west1.firebasedatabase.app/";
+const rootUrl = "https://sleazyjointhunt-default-rtdb.europe-west1.firebasedatabase.app/";
 
 const storeUser = async (user) => {
+  console.log(user)
   try {
-    await axios.post(`${rootUrl}` / user.json, user);
+    await axios.post(`${rootUrl}/user.json`,user);
   } catch (error) {
     console.error("Error storing user:", error);
   }
