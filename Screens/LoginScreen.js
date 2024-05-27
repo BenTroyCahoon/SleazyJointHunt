@@ -9,7 +9,7 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     console.log(username, password);
     try {
-      const user = await getUser(user);
+      const user = await getUser(username);
       console.log(user.password);
       if (password === user.password) {
         navigation.navigate("Home");
