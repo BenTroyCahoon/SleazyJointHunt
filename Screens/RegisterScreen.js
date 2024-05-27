@@ -1,10 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, View, Button, TextInput } from "react-native";
 
+const RegisterHandler = () => {};
+
 const RegisterScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
+      <TextInput style={styles.input} placeholder="Email" />
       <TextInput style={styles.input} placeholder="Username" />
       <TextInput style={styles.input} placeholder="Password" secureTextEntry />
       <TextInput
@@ -12,12 +15,7 @@ const RegisterScreen = ({ navigation }) => {
         placeholder="Confirm Password"
         secureTextEntry
       />
-      <Button
-        title="Register"
-        onPress={() => {
-          /* Implement registration logic */
-        }}
-      />
+      <Button title="Register" onPress={RegisterHandler} />
       <Button
         title="Back to Login"
         onPress={() => navigation.navigate("Login")}
