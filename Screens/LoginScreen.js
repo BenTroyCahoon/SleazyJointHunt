@@ -7,14 +7,18 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    console.log(username, password);
     try {
       const user = await getUser(username);
-      console.log(user.password);
-      if (password === user.password) {
-        navigation.navigate("Home");
+      if (user) {
+        if (user.password === password) {
+          // Navigate to the next screen on successful login
+          navigation.navigate("Home");
+        } else {
+          // Show an alert on failed login
+          Alert.alert("Login Failed", "Invalid username or password");
+        }
       } else {
-        Alert.alert("Login Failed", "Invalid username or password");
+        Alert.alert("Login Failed", "User not found");
       }
     } catch (error) {
       Alert.alert("Error logging in:", error.message);
