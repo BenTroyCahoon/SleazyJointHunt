@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Button, TextInput, Alert } from "react-native";
+import { fetchUser } from "../util/http";
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // Mock data for demonstration
-    const mockUsername = "user";
-    const mockPassword = "password";
-
-    if (username === mockUsername && password === mockPassword) {
-      // Navigate to the next screen on successful login
-      navigation.navigate("Home"); // assuming you have a Home screen
-    } else {
-      // Show an alert on failed login
-      Alert.alert("Login Failed", "Invalid username or password");
+  const handleLogin = async ({user}) => {
+    try {
+      const user = await fetchUser(user);
+      if (password === 123) {
+        navigation.navigate("Home");
+      } else {
+        console.log(user)
+        Alert.alert("Login Failed", "Invalid username or password");
+      }
+    } catch (error) {
+      Alert.alert("Error logging in:", error.message);
     }
   };
 

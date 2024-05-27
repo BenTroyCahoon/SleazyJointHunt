@@ -11,7 +11,20 @@ const storeUser = async (user) => {
   }
 };
 
-export { storeUser };
+const fetchUser = async (user) => {    
+  console.log("user: ", user)
+  console.log("username: ",username)
+  try {
+    const response = await axios.get(`${rootUrl}/users/${user}.json`);
+    return response.data;
+  } catch (error) {
+
+    console.error("Error fetching user:", error);
+    throw error;
+  }
+};
+
+export { storeUser, fetchUser };
 
 // const getUser = async (email) => {
 //     try {
