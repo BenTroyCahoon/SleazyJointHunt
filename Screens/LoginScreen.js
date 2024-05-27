@@ -6,13 +6,12 @@ const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async ({user}) => {
+  const handleLogin = async () => {
     try {
       const user = await fetchUser(user);
-      if (password === 123) {
+      if (user.password === 123) {
         navigation.navigate("Home");
       } else {
-        console.log(user)
         Alert.alert("Login Failed", "Invalid username or password");
       }
     } catch (error) {

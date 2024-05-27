@@ -3,7 +3,6 @@ import axios from "axios";
 const rootUrl = "https://sleazyjointhunt-default-rtdb.europe-west1.firebasedatabase.app/";
 
 const storeUser = async (user) => {
-  console.log(user)
   try {
     await axios.post(`${rootUrl}/user.json`,user);
   } catch (error) {
@@ -12,10 +11,9 @@ const storeUser = async (user) => {
 };
 
 const fetchUser = async (user) => {    
-  console.log("user: ", user)
-  console.log("username: ",username)
+
   try {
-    const response = await axios.get(`${rootUrl}/users/${user}.json`);
+    const response = await axios.get(`${rootUrl}/user.json`);
     return response.data;
   } catch (error) {
 
