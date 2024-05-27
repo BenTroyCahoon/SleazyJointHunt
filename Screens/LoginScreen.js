@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Button, TextInput, Alert } from "react-native";
-import { fetchUser } from "../util/http";
+import { getUser } from "../util/http";
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
+    console.log(username, password);
     try {
-      const user = await fetchUser(user);
-      if (user.password === 123) {
+      const user = await getUser(user);
+      console.log(user.password);
+      if (password === user.password) {
         navigation.navigate("Home");
       } else {
         Alert.alert("Login Failed", "Invalid username or password");
