@@ -33,16 +33,16 @@ const storeUser = async (user, imageUri) => {
 
 const getUser = async (username) => {
   try {
-    const response = await axios.get(`${rootUrl}/users.json`);
-    const users = response.data;
+    const response = await axios.get(`${rootUrl}/user.json`);
+    const user = response.data;
 
-    for (const key in users) {
-      if (users[key].username === username) {
+    for (const key in user) {
+      if (user[key].username === username) {
         return {
-          username: users[key].username,
-          password: users[key].password,
-          email: users[key].email,
-          profileImageUrl: users[key].profileImageUrl,
+          username: user[key].username,
+          password: user[key].password,
+          email: user[key].email,
+          profileImageUrl: user[key].profileImageUrl,
         };
       }
     }

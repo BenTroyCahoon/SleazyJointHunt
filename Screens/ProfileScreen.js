@@ -113,33 +113,33 @@ const ProfileScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Profil</Text>
 
-      {loading ? (
+      {/* {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <View>
-          <Text style={styles.username}>Användarnamn: {username}</Text>
+      ) : ( */}
+      <View>
+        <Text style={styles.username}>Användarnamn: {username}</Text>
 
-          {profileImage ? (
+        {/* {profileImage ? (
             <Image source={{ uri: profileImage }} style={styles.image} />
           ) : (
             <Image
               source={require("../assets/splash.png")} // Lägg till en standardbild i dina assets
               style={styles.image}
             />
-          )}
+          )} */}
 
-          <View style={styles.buttonContainer}>
-            <Button title="Välj bild från Galleri" onPress={pickImage} />
-            <Button title="Ta ett Foto" onPress={takePhoto} />
-          </View>
-
-          {uploading ? (
-            <ActivityIndicator size="large" color="#0000ff" />
-          ) : (
-            <Button title="Spara Profil" onPress={handleSaveProfile} />
-          )}
+        <View style={styles.buttonContainer}>
+          <Button title="Välj bild från Galleri" onPress={pickImage} />
+          <Button title="Ta ett Foto" onPress={takePhoto} />
         </View>
-      )}
+
+        {uploading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <Button title="Spara Profil" onPress={handleSaveProfile} />
+        )}
+      </View>
+      {/* )} */}
     </View>
   );
 };
