@@ -6,6 +6,22 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>WOOOHOOO hemskärmen är här!</Text>
+      <Button
+        title="profile"
+        onPress={() => navigation.navigate("Profile")}
+      />
+      <Button
+        title="Active Hunts"
+        onPress={() => navigation.navigate("ActiveHunts")}
+      />
+      <Button
+        title="Planned Hunts"
+        onPress={() => navigation.navigate("PlannedHunts")}
+      />
+      <Button
+        title="Create Hunt"
+        onPress={() => navigation.navigate("CreateHunt")}
+      />
     </View>
   );
 };
