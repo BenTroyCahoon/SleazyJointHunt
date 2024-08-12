@@ -10,6 +10,7 @@ const storeUser = async (user) => {
   }
 };
 
+/*
 const fetchUser = async (user) => {    
 
   try {
@@ -21,23 +22,27 @@ const fetchUser = async (user) => {
     throw error;
   }
 };
+*/
 
-export { storeUser, fetchUser };
+const getUser = async (username) => {
+    try {
+        const response = await axios.get(`${rootUrl}/user.json`);
+        const users = response.data;
+        console.log(response)
+        for (const key in users) {
+            if (users[key].username === username) {
+                return users[key];
+            }
+        }
+        return null;
+    } catch (error) {
+        console.error("Error getting user:", error);
+        return null;
+    }
+};
 
-// const getUser = async (email) => {
-//     try {
-//         const response = await axios.get(${rootUrl}/users.json);
-//         const users = response.data;
-//         for (const key in users) {
-//             if (users[key].email === email) {
-//                 return users[key];
-//             }
-//         }
-//         return null;
-//     } catch (error) {
-//         console.error("Error getting user:", error);
-//         return null;
-//     }
-// };
+export { storeUser, getUser };
+
+
 
 // export { storeUser, getUser };
