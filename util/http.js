@@ -1,4 +1,3 @@
-// http.js
 import axios from "axios";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import app from "./fireBaseConfig"; // Importera den initierade Firebase-appen
@@ -50,29 +49,20 @@ const getUser = async (username) => {
 
     return null;
   } catch (error) {
-
-    console.error("Error fetching user:", error);
-    throw error;
+    console.error("Fel vid hämtning av användare:", error);
+    return null;
   }
 };
-*/
 
-const getUser = async (username) => {
-    try {
-        const response = await axios.get(`${rootUrl}/user.json`);
-        const users = response.data;
-        console.log(response)
-        for (const key in users) {
-            if (users[key].username === username) {
-                return users[key];
-            }
-        }
-        return null;
-    } catch (error) {
-        console.error("Error getting user:", error);
-        return null;
-    }
+// Hämta alla användare från databasen
+const fetchAllUsers = async () => {
+  try {
+    const response = await axios.get(`${rootUrl}/user.json`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return null;
+  }
 };
 
-export { storeUser, getUser };
-
+export { storeUser, getUser, fetchAllUsers };
