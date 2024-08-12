@@ -11,7 +11,9 @@ const storeUser = async (user) => {
   }
 };
 
-const getUser = async (username) => {
+/*
+const fetchUser = async (user) => {    
+
   try {
     const response = await axios.get(`${rootUrl}/user.json`);
     const users = response.data;
@@ -31,9 +33,29 @@ const getUser = async (username) => {
 
     return null;
   } catch (error) {
-    console.error("Error getting user:", error);
-    return null;
+
+    console.error("Error fetching user:", error);
+    throw error;
   }
+};
+*/
+
+const getUser = async (username) => {
+    try {
+        const response = await axios.get(`${rootUrl}/user.json`);
+        const users = response.data;
+        console.log(response)
+        for (const key in users) {
+            if (users[key].username === username) {
+                return users[key];
+            }
+        }
+        return null;
+    } catch (error) {
+        console.error("Error getting user:", error);
+        return null;
+    }
 };
 
 export { storeUser, getUser };
+
