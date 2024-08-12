@@ -58,7 +58,6 @@ const getUser = async (username) => {
 
 // Hämta alla användare från databasen
 const fetchAllUsers = async () => {
-  console.log('hämtar')
   try {
       const response = await axios.get(`${rootUrl}/user.json`);
       return response.data;

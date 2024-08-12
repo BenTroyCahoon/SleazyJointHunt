@@ -54,21 +54,21 @@
 
 
 //         return (
-//             <View style={{ padding: 20 }}>
-//                 <Text style={{ fontSize: 24 }}>Invite some friends</Text>
-//                 <ScrollView>
-//                     {users.map(user => (
-//                         <View key={user.id} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-//                             <CheckBox
-//                                 value={!!selectedUsers[user.id]}
-//                                 onValueChange={() => handleCheckboxChange(user.id)}
-//                             />
-//                             <Text style={{ marginLeft: 10 }}>{user.username}</Text>
-//                         </View>
-//                     ))}
-//                 </ScrollView>
-//                 <Button title="Create Hunt!" onPress={handleCreate} />
-//             </View>
+            // <View style={{ padding: 20 }}>
+            //     <Text style={{ fontSize: 24 }}>Invite some friends</Text>
+            //     <ScrollView>
+            //         {users.map(user => (
+            //             <View key={user.id} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+            //                 <CheckBox
+            //                     value={!!selectedUsers[user.id]}
+            //                     onValueChange={() => handleCheckboxChange(user.id)}
+            //                 />
+            //                 <Text style={{ marginLeft: 10 }}>{user.username}</Text>
+            //             </View>
+            //         ))}
+            //     </ScrollView>
+            //     <Button title="Create Hunt!" onPress={handleCreate} />
+            // </View>
 //         )
 //     }
 
@@ -100,14 +100,16 @@ const InvitePlayers = () => {
 
     return (
         <View style={{ padding: 20 }}>
-            <Text style={{ fontSize: 24 }}>Invite Players</Text>
+            <Text style={{ fontSize: 35 }}>Invite Players</Text>
             <FlatList
                 data={usernames}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                    <Text style={{ fontSize: 18 }}>{item}</Text>
+                    <Text style={{ fontSize: 22 }}>{item}</Text>
                 )}
             />
+            
+
         </View>
     );
 };
