@@ -44,7 +44,6 @@ const getUser = async (username) => {
     try {
         const response = await axios.get(`${rootUrl}/user.json`);
         const users = response.data;
-        console.log(response)
         for (const key in users) {
             if (users[key].username === username) {
                 return users[key];
@@ -57,5 +56,17 @@ const getUser = async (username) => {
     }
 };
 
-export { storeUser, getUser };
+// Hämta alla användare från databasen
+const fetchAllUsers = async () => {
+  console.log('hämtar')
+  try {
+      const response = await axios.get(`${rootUrl}/user.json`);
+      return response.data;
+  } catch (error) {
+      console.error("Error fetching users:", error);
+      return null;
+  }
+};
+
+export { storeUser, getUser, fetchAllUsers };
 
