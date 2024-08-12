@@ -9,14 +9,8 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       const user = await getUser(username);
-      if (user) {
-        if (user.password === password) {
-          // Navigate to the next screen on successful login
-          navigation.navigate("Home");
-        } else {
-          // Show an alert on failed login
-          Alert.alert("Login Failed", "Invalid username or password");
-        }
+      if (user.password === password) {
+        navigation.navigate("Home");
       } else {
         Alert.alert("Login Failed", "User not found");
       }
