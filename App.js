@@ -8,8 +8,9 @@ import RegisterScreen from "./Screens/RegisterScreen";
 import HomeScreen from "./Screens/HomeScreen";
 import ProfileScreen from "./Screens/ProfileScreen";
 import ActiveHunts from "./Screens/ActiveHunts";
-import CreateHunts from "./Screens/CreateHunt";
+import CreateHunt from "./Screens/CreateHunt";
 import PlannedHunts from "./Screens/PlannedHunts"
+import InvitePlayers from "./Screens/InvitePlayers"
 
 const Stack = createNativeStackNavigator();
 
@@ -24,8 +25,9 @@ export default function App() {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="ActiveHunts" component={ActiveHunts} />
-          <Stack.Screen name="CreateHunts" component={CreateHunts} />
+          <Stack.Screen name="CreateHunt" component={CreateHunt} />
           <Stack.Screen name="PlannedHunts" component={PlannedHunts} />
+          <Stack.Screen name="InvitePlayers" component={InvitePlayers} />
         </Stack.Navigator>
       </NavigationContainer>
     </>
