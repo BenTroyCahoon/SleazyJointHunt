@@ -111,21 +111,22 @@ const getUser = async (username) => {
     for (const key in users) {
       if (users[key].username === username) {
         console.log("Hittad användare:", users[key]); // Logga användardata
-        return {
+        return { ...users[key], id: key }
+        /*return {
           username: users[key].username,
           password: users[key].password,
           email: users[key].email,
           profileImageUrl: users[key].profileImageUrl,
-        };
+        };*/
       }
     }
-
     return null;
   } catch (error) {
     console.error("Fel vid hämtning av användare:", error);
     return null;
   }
 };
+
 
 // Hämta alla användare från databasen
 const fetchAllUsers = async () => {

@@ -188,36 +188,71 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { storeUser, getUser } from "../util/http"; // Kontrollera att sökvägen är korrekt
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfileScreen = ({ route, navigation }) => {
   const [profileImage, setProfileImage] = useState(null);
   const [username, setUsername] = useState("");
   const [uploading, setUploading] = useState(false);
 
-  const { currentUsername } = route.params || {};
-  
+  //const { currentUsername } = route.params || {};
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!currentUsername) return;
-
       try {
-        const user = await getUser(currentUsername);
-        if (user) {
-          console.log("Användardata hämtad:", user); // Logga användardata
-          setUsername(user.username);
-          setProfileImage(user.profileImageUrl || null);
+        const userName = await AsyncStorage.getItem("username");
+        console.log('username: ', userName);
+        
+        if (userName) {
+          const user = await getUser(userName); // Använd await här
+          if (user) {
+            console.log("Användardata hämtad:", user);
+            setUsername(user.username);
+            setProfileImage(user.profileImageUrl || null);
+          } else {
+            Alert.alert("Användare ej hittad", "Kunde inte hämta användardata.");
+          }
         } else {
-          Alert.alert("Användare ej hittad", "Kunde inte hämta användardata.");
+          Alert.alert("Ingen användare inloggad", "Kunde inte hämta användardata.");
         }
       } catch (error) {
         console.error("Fel vid hämtning av användardata:", error);
         Alert.alert("Fel", "Misslyckades med att hämta användardata.");
       }
     };
-
+  
     fetchUserData();
-  }, [currentUsername]);
+  }, []);
+  
+
+
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+     
+      //if (currentUsername) return;
+  //     try { 
+  //       //const user = await getUser(currentUsername);
+  //       const userName = await AsyncStorage.getItem("username")
+  //       console.log('userName: ', userName)
+  //       console.log('username:', username)
+  //       const user = getUser(userName)
+  //       if (user) {
+  //         console.log("Användardata hämtad:", user); // Logga användardata
+  //         setUsername(user.username);
+  //         setProfileImage(user.profileImageUrl || null);
+  //       } else {
+  //         Alert.alert("Användare ej hittad", "Kunde inte hämta användardata.");
+  //       }
+  //     } catch (error) {
+  //       console.error("Fel vid hämtning av användardata:", error);
+  //       Alert.alert("Fel", "Misslyckades med att hämta användardata.");
+  //     }
+  //   };
+
+  //   fetchUserData();
+  // }, []);
+
+
 
   const pickImage = async () => {
     const permissionResult =
