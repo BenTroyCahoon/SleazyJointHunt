@@ -58,11 +58,23 @@ const getUser = async (username) => {
 const fetchAllUsers = async () => {
   try {
     const response = await axios.get(`${rootUrl}/user.json`);
-    return response.data;
+    const users = response.data;
+    return Object.keys(users).map(key => ({ ...users[key], username: users[key].username }));
   } catch (error) {
     console.error("Error fetching users:", error);
     return null;
   }
 };
 
-export { storeUser, getUser, fetchAllUsers };
+const storeHunt = async (huntData) => {
+  try {
+    const response = await axios.post(`${rootUrl}/hunts.json`, huntData);
+    console.log("Hunt saved successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error storing hunt:", error);
+    throw error;
+  }
+};
+
+export { storeUser, getUser, fetchAllUsers, storeHunt };
