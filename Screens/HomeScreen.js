@@ -1,7 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button, TextInput, Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { storeUser, getUser } from "../util/http"; 
 
 const HomeScreen = ({ navigation }) => {
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('username');
+      navigation.navigate('Login');
+    } catch (error) {
+      Alert.alert('Error logging out: ', error.message);
+    }
+  }
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          title="Logga ut"
+          onPress={handleLogout}
+        />
+      ),
+    });
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>WOOOHOOO hemskärmen är här!</Text>

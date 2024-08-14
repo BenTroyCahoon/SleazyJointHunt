@@ -39,21 +39,17 @@ export default function App() {
       <StatusBar style="auto" />
       <NavigationContainer>
         <Stack.Navigator>
-          {isLoggedIn ? (
-            <>
+
               <Stack.Screen name="Home" component={HomeScreen} />
               <Stack.Screen name="Profile" component={ProfileScreen} />
               <Stack.Screen name="ActiveHunts" component={ActiveHunts} />
               <Stack.Screen name="CreateHunt" component={CreateHunt} />
               <Stack.Screen name="PlannedHunts" component={PlannedHunts} />
               <Stack.Screen name="InvitePlayers" component={InvitePlayers} />
-            </>
-          ) : (
-            <>
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="Register" component={RegisterScreen} />
-            </>
-          )}
+
+
         </Stack.Navigator>
       </NavigationContainer>
     </>

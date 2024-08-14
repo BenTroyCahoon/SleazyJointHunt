@@ -106,7 +106,7 @@ const getUser = async (username) => {
     const response = await axios.get(`${rootUrl}/user.json`);
     const users = response.data;
 
-    console.log("Hämtad data från Firebase:", users); // Logga all data som hämtas
+    // console.log("Hämtad data från Firebase:", users); // Logga all data som hämtas
 
     for (const key in users) {
       if (users[key].username === username) {
