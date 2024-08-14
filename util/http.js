@@ -132,11 +132,23 @@ const fetchAllUsers = async () => {
   try {
     // Använd "user" som endpoint
     const response = await axios.get(`${rootUrl}/user.json`);
-    return response.data;
+    const users = response.data;
+    return Object.keys(users).map(key => ({ ...users[key], username: users[key].username }));
   } catch (error) {
     console.error("Fel vid hämtning av användare:", error);
     return null;
   }
 };
 
-export { storeUser, getUser, fetchAllUsers };
+const storeHunt = async (huntData) => {
+  try {
+    const response = await axios.post(`${rootUrl}/hunts.json`, huntData);
+    console.log("Hunt saved successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error storing hunt:", error);
+    throw error;
+  }
+};
+
+export { storeUser, getUser, fetchAllUsers, storeHunt };
