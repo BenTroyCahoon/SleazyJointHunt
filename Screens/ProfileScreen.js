@@ -195,6 +195,7 @@ const ProfileScreen = ({ route, navigation }) => {
   const [uploading, setUploading] = useState(false);
 
   const { currentUsername } = route.params || {};
+  
 
   useEffect(() => {
     const fetchUserData = async () => {
