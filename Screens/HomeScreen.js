@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Button, TextInput, Alert } from "react-native";
 
 const HomeScreen = ({ navigation }) => {
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>WOOOHOOO hemskärmen är här!</Text>

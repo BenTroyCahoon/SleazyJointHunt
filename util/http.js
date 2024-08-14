@@ -35,7 +35,7 @@ const getUser = async (username) => {
   try {
     const response = await axios.get(`${rootUrl}/user.json`);
     const user = response.data;
-
+    // console.log(response)
     for (const key in user) {
       if (user[key].username === username) {
         return {
