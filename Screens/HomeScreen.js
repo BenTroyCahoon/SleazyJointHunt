@@ -2,14 +2,10 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Button, TextInput, Alert } from "react-native";
 
 const HomeScreen = ({ navigation }) => {
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>WOOOHOOO hemskärmen är här!</Text>
-      <Button
-        title="profile"
-        onPress={() => navigation.navigate("Profile")}
-      />
+      <Button title="profile" onPress={() => navigation.navigate("Profile")} />
       <Button
         title="Active Hunts"
         onPress={() => navigation.navigate("ActiveHunts")}
