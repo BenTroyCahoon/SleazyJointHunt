@@ -14,7 +14,7 @@ const RegisterScreen = ({ navigation }) => {
       return;
     }
 
-    const user = { email, username, password, };
+    const user = { email, username, password,  };
 
 
     try {

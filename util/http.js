@@ -75,9 +75,11 @@ const storage = getStorage(app);
 const rootUrl =
   "https://sleazyjointhunt-default-rtdb.europe-west1.firebasedatabase.app/";
 
-const storeUser = async (user, imageUri) => {
+const defaultProfilePic = "https://firebasestorage.googleapis.com/v0/b/sleazyjointhunt.appspot.com/o/profileImages%2Fakkakabotto.png?alt=media&token=e1ad9298-51b1-4f2c-8a97-2cd74e168929"
+
+const storeUser = async (user, imageUri = null) => {
   try {
-    let profileImageUrl = null;
+    let profileImageUrl = defaultProfilePic;
 
     if (imageUri) {
       const response = await fetch(imageUri);
@@ -89,7 +91,8 @@ const storeUser = async (user, imageUri) => {
 
     const userData = {
       ...user,
-      profileImageUrl: profileImageUrl || user.profileImageUrl,
+      profileImageUrl
+      // profileImageUrl: profileImageUrl || user.profileImageUrl,
     };
 
     // Använd "user" som endpoint
