@@ -68,6 +68,7 @@
 // export { storeUser, getUser, fetchAllUsers };
 
 import axios from "axios";
+import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import app from "./fireBaseConfig"; // Importera den initierade Firebase-appen
 
@@ -76,6 +77,8 @@ const rootUrl =
   "https://sleazyjointhunt-default-rtdb.europe-west1.firebasedatabase.app/";
 
 const defaultProfilePic = "https://firebasestorage.googleapis.com/v0/b/sleazyjointhunt.appspot.com/o/profileImages%2Fakkakabotto.png?alt=media&token=e1ad9298-51b1-4f2c-8a97-2cd74e168929"
+
+
 
 const storeUser = async (user, imageUri = null) => {
   try {
@@ -103,6 +106,26 @@ const storeUser = async (user, imageUri = null) => {
   }
 };
 
+const changePic = async (user, imageUri ) => {
+
+  // if (imageUri) {
+  //   const response = await fetch(imageUri);
+  //   const blob = await response.blob();
+  //   const imageRef = ref(storage, `profileImages/${Date.now()}-profile.jpg`);
+  //   await uploadBytes(imageRef, blob);
+  //   profileImageUrl = await getDownloadURL(imageRef);
+  // }
+
+  // const userData = {
+  //   ...user,
+  //   profileImageUrl
+  //   // profileImageUrl: profileImageUrl || user.profileImageUrl,
+  // };
+
+  await axios.put(`${rootUrl}/user/${user.id}.json`)
+  console.log(user.id)
+}
+
 const getUser = async (username) => {
   try {
     // Använd "user" som endpoint
@@ -114,6 +137,7 @@ const getUser = async (username) => {
     for (const key in users) {
       if (users[key].username === username) {
         console.log("Hittad användare:", users[key]); // Logga användardata
+        console.log('keys: ', key)
         return { ...users[key], id: key }
         /*return {
           username: users[key].username,
@@ -155,4 +179,4 @@ const storeHunt = async (huntData) => {
   }
 };
 
-export { storeUser, getUser, fetchAllUsers, storeHunt };
+export { storeUser, getUser, fetchAllUsers, storeHunt, changePic };
