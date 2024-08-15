@@ -1,72 +1,3 @@
-// import axios from "axios";
-// import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-// import app from "./fireBaseConfig"; // Importera den initierade Firebase-appen
-
-// const storage = getStorage(app);
-
-// const rootUrl =
-//   "https://sleazyjointhunt-default-rtdb.europe-west1.firebasedatabase.app/";
-
-// const storeUser = async (user, imageUri) => {
-//   try {
-//     let profileImageUrl = null;
-
-//     if (imageUri) {
-//       const response = await fetch(imageUri);
-//       const blob = await response.blob();
-//       const imageRef = ref(storage, `profileImages/${Date.now()}-profile.jpg`);
-//       await uploadBytes(imageRef, blob);
-//       profileImageUrl = await getDownloadURL(imageRef);
-//     }
-
-//     const userData = {
-//       ...user,
-//       profileImageUrl: profileImageUrl || user.profileImageUrl,
-//     };
-
-//     await axios.post(`${rootUrl}/users.json`, userData);
-//     console.log("Användardata har sparats framgångsrikt.");
-//   } catch (error) {
-//     console.error("Fel vid sparande av användare:", error);
-//   }
-// };
-
-// const getUser = async (username) => {
-//   try {
-//     const response = await axios.get(`${rootUrl}/user.json`);
-//     const user = response.data;
-
-//     for (const key in user) {
-//       if (user[key].username === username) {
-//         return {
-//           username: user[key].username,
-//           password: user[key].password,
-//           email: user[key].email,
-//           profileImageUrl: user[key].profileImageUrl,
-//         };
-//       }
-//     }
-
-//     return null;
-//   } catch (error) {
-//     console.error("Fel vid hämtning av användare:", error);
-//     return null;
-//   }
-// };
-
-// // Hämta alla användare från databasen
-// const fetchAllUsers = async () => {
-//   try {
-//     const response = await axios.get(`${rootUrl}/user.json`);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error fetching users:", error);
-//     return null;
-//   }
-// };
-
-// export { storeUser, getUser, fetchAllUsers };
-
 import axios from "axios";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import app from "./fireBaseConfig"; // Importera den initierade Firebase-appen
@@ -75,7 +6,8 @@ const storage = getStorage(app);
 const rootUrl =
   "https://sleazyjointhunt-default-rtdb.europe-west1.firebasedatabase.app/";
 
-const defaultProfilePic = "https://firebasestorage.googleapis.com/v0/b/sleazyjointhunt.appspot.com/o/profileImages%2Fakkakabotto.png?alt=media&token=e1ad9298-51b1-4f2c-8a97-2cd74e168929"
+const defaultProfilePic = 
+  "https://firebasestorage.googleapis.com/v0/b/sleazyjointhunt.appspot.com/o/profileImages%2Fakkakabotto.png?alt=media&token=e1ad9298-51b1-4f2c-8a97-2cd74e168929"
 
 const storeUser = async (user, imageUri = null) => {
   try {
@@ -92,10 +24,8 @@ const storeUser = async (user, imageUri = null) => {
     const userData = {
       ...user,
       profileImageUrl
-      // profileImageUrl: profileImageUrl || user.profileImageUrl,
     };
 
-    // Använd "user" som endpoint
     await axios.post(`${rootUrl}/user.json`, userData);
     console.log("Användardata har sparats framgångsrikt.");
   } catch (error) {
@@ -105,7 +35,6 @@ const storeUser = async (user, imageUri = null) => {
 
 const getUser = async (username) => {
   try {
-    // Använd "user" som endpoint
     const response = await axios.get(`${rootUrl}/user.json`);
     const users = response.data;
 
@@ -113,14 +42,8 @@ const getUser = async (username) => {
 
     for (const key in users) {
       if (users[key].username === username) {
-        console.log("Hittad användare:", users[key]); // Logga användardata
+        // console.log("Hittad användare:", users[key]); // Logga användardata
         return { ...users[key], id: key }
-        /*return {
-          username: users[key].username,
-          password: users[key].password,
-          email: users[key].email,
-          profileImageUrl: users[key].profileImageUrl,
-        };*/
       }
     }
     return null;
@@ -131,10 +54,39 @@ const getUser = async (username) => {
 };
 
 
+const updateUserProfileImage = async (userId, imageUri) => {
+  try {
+    if (!imageUri) {
+      throw new Error("Ingen bild att ladda upp.");
+    }
+
+    // Ladda upp bilden till Firebase Storage
+    const response = await fetch(imageUri);
+    const blob = await response.blob();
+    const imageRef = ref(storage, `profileImages/${Date.now()}-profile.jpg`);
+    await uploadBytes(imageRef, blob);
+    const profileImageUrl = await getDownloadURL(imageRef);
+
+    const currentUserResponse = await axios.get(`${rootUrl}/user/${userId}.json`);
+    const currentUserData = currentUserResponse.data;
+
+    await axios.put(`${rootUrl}/user/${userId}.json`, {
+      email: currentUserData.email,
+      password: currentUserData.password,
+      username: currentUserData.username,
+      profileImageUrl: profileImageUrl, // Endast profilbilden uppdateras
+    });
+
+    return profileImageUrl;
+  } catch (error) {
+    console.error("Fel vid uppdatering av profilbild:", error);
+    throw error;
+  }
+};
+
 // Hämta alla användare från databasen
 const fetchAllUsers = async () => {
   try {
-    // Använd "user" som endpoint
     const response = await axios.get(`${rootUrl}/user.json`);
     const users = response.data;
     return Object.keys(users).map(key => ({ ...users[key], username: users[key].username }));
@@ -155,4 +107,4 @@ const storeHunt = async (huntData) => {
   }
 };
 
-export { storeUser, getUser, fetchAllUsers, storeHunt };
+export { storeUser, getUser, fetchAllUsers, storeHunt, updateUserProfileImage };
