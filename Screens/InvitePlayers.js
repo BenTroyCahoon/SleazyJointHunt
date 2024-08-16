@@ -17,6 +17,7 @@ const InvitePlayers = ({ navigation, route }) => {
 
     const [users, setUsers] = useState([]); // Håller reda på användardata
     const [selectedUsers, setSelectedUsers] = useState({}); // Håller reda på valda användare
+    //const [selectedUsers, setSelectedUsers] = useState([]); // Håller reda på valda användare
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -45,22 +46,24 @@ const InvitePlayers = ({ navigation, route }) => {
         const allUsers = await fetchAllUsers()
         const usersID = allUsers.map((user) => user.id)
 
-        console.log('all Users:', allUsers)
-        console.log('all ids:', usersID)
-
         //----------------------------- plocka fram användarens ID!!!! 
         const username = await AsyncStorage.getItem("username");
         const user = await getUser(username)
         const ID = user.id
 
+        const sendInviteTo = Object.keys(selectedUsers)
+   
+
+        //console.log('Selected users: ', selectedUsers)
+
         // Bygg huntData från parametrarna och de valda användarna
         const huntData = {
-            creator: ID, 
-            name: huntName, 
-            time: estimatedTime, 
-            invitedUsers: usersID, 
+            creator: ID,
+            name: huntName,
+            time: estimatedTime,
+            invitedUsers: sendInviteTo,
         };
-        console.log('user ID:', ID)
+        //console.log('user ID:', ID)
         try {
             // Skicka huntData och huntImage till backend för att spara
             await storeHunt(huntData, iconUri);
@@ -87,8 +90,8 @@ const InvitePlayers = ({ navigation, route }) => {
                         }}
                     >
                         <CheckBox
-                            checked={!!selectedUsers[item.username]}
-                            onPress={() => toggleSelection(item.username)}
+                            checked={!!selectedUsers[item.id]}
+                            onPress={() => toggleSelection(item.id)}
                         />
                         <Text style={{ fontSize: 22 }}>{item.username}</Text>
                     </View>
