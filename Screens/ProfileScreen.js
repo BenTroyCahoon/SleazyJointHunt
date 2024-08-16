@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,28 +14,28 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { storeUser, getUser, updateUserProfileImage } from "../util/http"; 
 
-const ProfileScreen = ({ route, navigation }) => {
+const ProfileScreen = ({ navigation }) => {
   const [profileImage, setProfileImage] = useState(null);
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState("");
   const [uploading, setUploading] = useState(false);
 
-  //const { currentUsername } = route.params || {};
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchUserData = async () => {
       try {
         const storedUsername = await AsyncStorage.getItem("username");
         // console.log('username: ', userName);
         
-        if (storedUsername) {storedUsername
+        if (storedUsername) {
           const user = await getUser(storedUsername); // Använd await här
+
+
           if (user) {
             // console.log("Användardata hämtad:", user);
             setUsername(user.username);
             setProfileImage(user.profileImageUrl || null);
             setUserId(user.id)
-
+    
           } else {
             Alert.alert("Användare ej hittad", "Kunde inte hämta användardata.");
           }
@@ -47,38 +48,9 @@ const ProfileScreen = ({ route, navigation }) => {
       }
     };
 
+
     fetchUserData();
   }, []);
-  
-
-
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-     
-      //if (currentUsername) return;
-  //     try { 
-  //       //const user = await getUser(currentUsername);
-  //       const userName = await AsyncStorage.getItem("username")
-  //       console.log('userName: ', userName)
-  //       console.log('username:', username)
-  //       const user = getUser(userName)
-  //       if (user) {
-  //         console.log("Användardata hämtad:", user); // Logga användardata
-  //         setUsername(user.username);
-  //         setProfileImage(user.profileImageUrl || null);
-  //       } else {
-  //         Alert.alert("Användare ej hittad", "Kunde inte hämta användardata.");
-  //       }
-  //     } catch (error) {
-  //       console.error("Fel vid hämtning av användardata:", error);
-  //       Alert.alert("Fel", "Misslyckades med att hämta användardata.");
-  //     }
-  //   };
-
-  //   fetchUserData();
-  // }, []);
-
-
 
   const pickImage = async () => {
     const permissionResult =
@@ -137,6 +109,7 @@ const ProfileScreen = ({ route, navigation }) => {
       console.log('User ID som används vid bilduppdatering:', userId);
       const user = { username };
       await updateUserProfileImage(userId, profileImage);
+
       Alert.alert("Framgång", "Profilen har uppdaterats framgångsrikt.");
     } catch (error) {
       console.error("Fel vid sparande av profil:", error);
@@ -149,30 +122,27 @@ const ProfileScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profil</Text>
+      <Text style={styles.username}>Användarnamn: {user.username}</Text>
 
-      <View>
-        <Text style={styles.username}>Användarnamn: {username}</Text>
+      {profileImage ? (
+        <Image source={{ uri: profileImage }} style={styles.image} />
+      ) : (
+        <Image
+          source={require("../assets/akkakabotto.png")}
+          style={styles.image}
+        />
+      )}
 
-        {profileImage ? (
-          <Image source={{ uri: profileImage }} style={styles.image} />
-        ) : (
-          <Image
-            source={require("../assets/akkakabotto.png")} // Se till att denna fil finns
-            style={styles.image}
-          />
-        )}
-
-        <View style={styles.buttonContainer}>
-          <Button title="Välj bild från Galleri" onPress={pickImage} />
-          <Button title="Ta ett Foto" onPress={takePhoto} />
-        </View>
-
-        {uploading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <Button title="Spara Profil" onPress={handleSaveProfile} />
-        )}
+      <View style={styles.buttonContainer}>
+        <Button title="Välj bild från Galleri" onPress={pickImage} />
+        <Button title="Ta ett Foto" onPress={takePhoto} />
       </View>
+
+      {uploading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <Button title="Spara Profil" onPress={handleSaveProfile} />
+      )}
     </View>
   );
 };
