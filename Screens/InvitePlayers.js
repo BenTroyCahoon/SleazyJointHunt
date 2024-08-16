@@ -1,90 +1,280 @@
+// import React, { useEffect, useState } from "react";
+// import { Alert, View, Text, FlatList, TouchableOpacity } from "react-native";
+// import { CheckBox } from "react-native-elements";
+// import { fetchAllUsers, storeHunt, getUser, changePic } from "../util/http";
+
+// const InvitePlayers = ({ navigation, route }) => {
+//   const { huntName, estimatedTime, iconUri } = route.params;
+//   const [users, setUsers] = useState([]);
+//   const [selectedUsers, setSelectedUsers] = useState({});
+
+//   useEffect(() => {
+//     const fetchUsers = async () => {
+//       const usersData = await fetchAllUsers();
+//       if (usersData) {
+//         const filteredUsers = Object.keys(usersData)
+//           .map((key) => ({ id: key, ...usersData[key] }))
+//           .filter((user) => user.username);
+
+//         setUsers(filteredUsers);
+//       } else {
+//         console.log("No users found");
+//       }
+//     };
+
+//     fetchUsers();
+//   }, []);
+
+//   const toggleSelection = (username) => {
+//     setSelectedUsers((prevState) => ({
+//       ...prevState,
+//       [username]: !prevState[username],
+//     }));
+//   };
+
+//   const handleInvite = async () => {
+//     const invitedUsers = Object.keys(selectedUsers).filter(
+//       (username) => selectedUsers[username]
+//     );
+
+//     const huntData = {
+//       name: huntName, // Använder huntName som skickades via props
+//       time: estimatedTime, // Använder estimatedTime som skickades via props
+//       image: iconUri, // Använder iconUri som skickades via props
+//       invitedUsers: invitedUsers,
+//     };
+
+//     try {
+//       await storeHunt(huntData);
+//       console.log("Hunt created successfully!");
+//       console.log(huntData);
+//     } catch (error) {
+//       console.error("Failed to create hunt:", error);
+//     }
+//   };
+
+//   return (
+//     <View style={{ flex: 1, padding: 20 }}>
+//       <Text style={{ fontSize: 35, marginBottom: 20 }}>Invite Players</Text>
+//       <FlatList
+//         data={users}
+//         keyExtractor={(item) => item.id}
+//         renderItem={({ item }) => (
+//           <View
+//             style={{
+//               flexDirection: "row",
+//               alignItems: "center",
+//               marginBottom: 10,
+//             }}
+//           >
+//             <CheckBox
+//               checked={!!selectedUsers[item.id]}
+//               onPress={() => toggleSelection(item.id)}
+//             />
+//             <Text style={{ fontSize: 22 }}>{item.username}</Text>
+//           </View>
+//         )}
+//       />
+//       <TouchableOpacity onPress={handleInvite} style={{ marginTop: 20 }}>
+//         <View style={{ backgroundColor: "blue", padding: 15, borderRadius: 5 }}>
+//           <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
+//             Invite Selected Users
+//           </Text>
+//         </View>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
+
+// export default InvitePlayers;
+
+// import React, { useEffect, useState } from "react";
+// import { View, Text, FlatList, TouchableOpacity } from "react-native";
+// import { CheckBox } from "react-native-elements";
+// import { fetchAllUsers, storeHunt } from "../util/http";
+
+// const InvitePlayers = ({ navigation, route }) => {
+//   const { huntName, estimatedTime, iconUri } = route.params;
+//   const [users, setUsers] = useState([]);
+//   const [selectedUsers, setSelectedUsers] = useState({});
+
+//   useEffect(() => {
+//     const fetchUsers = async () => {
+//       const usersData = await fetchAllUsers();
+//       if (usersData) {
+//         const filteredUsers = Object.keys(usersData)
+//           .map((key) => ({ id: key, ...usersData[key] }))
+//           .filter((user) => user.username);
+
+//         setUsers(filteredUsers);
+//       } else {
+//         console.log("No users found");
+//       }
+//     };
+
+//     fetchUsers();
+//   }, []);
+
+//   const toggleSelection = (username) => {
+//     setSelectedUsers((prevState) => ({
+//       ...prevState,
+//       [username]: !prevState[username],
+//     }));
+//   };
+
+//   const handleInvite = async () => {
+//     const invitedUsers = Object.keys(selectedUsers).filter(
+//       (username) => selectedUsers[username]
+//     );
+
+//     const huntData = {
+//       name: huntName, // Använder huntName som skickades via props
+//       time: estimatedTime, // Använder estimatedTime som skickades via props
+//       image: iconUri, // Använder iconUri som skickades via props
+//       invitedUsers: invitedUsers,
+//     };
+
+//     try {
+//       await storeHunt(huntData);
+//       console.log("Hunt created successfully!");
+//       console.log(huntData);
+//       // Navigera användaren till en annan sida om du vill, t.ex. hem
+//       // navigation.navigate('Home');
+//     } catch (error) {
+//       console.error("Failed to create hunt:", error);
+//     }
+//   };
+
+//   return (
+//     <View style={{ flex: 1, padding: 20 }}>
+//       <Text style={{ fontSize: 35, marginBottom: 20 }}>Invite Players</Text>
+//       <FlatList
+//         data={users}
+//         keyExtractor={(item) => item.id}
+//         renderItem={({ item }) => (
+//           <View
+//             style={{
+//               flexDirection: "row",
+//               alignItems: "center",
+//               marginBottom: 10,
+//             }}
+//           >
+//             <CheckBox
+//               checked={!!selectedUsers[item.id]}
+//               onPress={() => toggleSelection(item.id)}
+//             />
+//             <Text style={{ fontSize: 22 }}>{item.username}</Text>
+//           </View>
+//         )}
+//       />
+//       <TouchableOpacity onPress={handleInvite} style={{ marginTop: 20 }}>
+//         <View style={{ backgroundColor: "blue", padding: 15, borderRadius: 5 }}>
+//           <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
+//             Invite Selected Users
+//           </Text>
+//         </View>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
+
+// export default InvitePlayers;
+
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
-import { CheckBox } from 'react-native-elements';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
+import { CheckBox } from "react-native-elements";
 import { fetchAllUsers, storeHunt } from "../util/http";
 
-const InvitePlayers = ({ navigation }) => {
-    // const [usernames, setUsernames] = useState([]);
-    const [users, setUsers] = useState([]); // Håller reda på användardata
-    const [selectedUsers, setSelectedUsers] = useState({}); // Håller reda på valda användare
-    const [huntName, setHuntName] = useState("");
-    const [huntTime, setHuntTime] = useState("");
-    const [huntImage, setHuntImage] = useState(""); // Du kan senare ersätta detta med faktisk bildval
+const InvitePlayers = ({ navigation, route }) => {
+  // Hämta huntName, huntTime och huntImage från navigationsrutan
+  const { huntName, estimatedTime, iconUri } = route.params;
 
+  const [users, setUsers] = useState([]); // Håller reda på användardata
+  const [selectedUsers, setSelectedUsers] = useState({}); // Håller reda på valda användare
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            const usersData = await fetchAllUsers();
-            //console.log("Fetched users data:", usersData);
-            
-            if (usersData) {
-                // Filtrera bort användare utan username och se till att varje användare har ett unikt ID
-                const filteredUsers = Object.keys(usersData)
-                    .map(key => ({ id: key, ...usersData[key] }))
-                    .filter(user => user.username);
-                
-                setUsers(filteredUsers);
-            } else {
-                console.log("No users found");
-            }
-        };
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const usersData = await fetchAllUsers();
+      if (usersData) {
+        // Filtrera bort användare utan username och se till att varje användare har ett unikt ID
+        const filteredUsers = usersData.filter((user) => user.username); // Filtrera bort användare utan användarnamn
 
-        fetchUsers();
-    }, []);
-
-    const toggleSelection = (username) => {
-        setSelectedUsers(prevState => ({
-            ...prevState,
-            [username]: !prevState[username],
-        }));
+        setUsers(filteredUsers);
+      } else {
+        console.log("No users found");
+      }
     };
 
-    const handleInvite = async () => {
-        const invitedUsers = Object.keys(selectedUsers).filter(username => selectedUsers[username]);
-        //console.log("Invited users:", invitedUsers);
-        // Här kan du lägga till logik för att spara inbjudna användare i databasen
-        const huntData = {
-            name: huntName,
-            time: huntTime,
-            image: huntImage,
-            invitedUsers: invitedUsers
-        };
+    fetchUsers();
+  }, []);
 
-        try {
-            await storeHunt(huntData);
-            console.log("Hunt created successfully!");
-            console.log(huntData)
-            // Navigera användaren till en annan sida om du vill, t.ex. hem
-            //navigation.navigate('Home');
-        } catch (error) {
-            console.error("Failed to create hunt:", error);
-        }
-    };
+  const toggleSelection = (username) => {
+    setSelectedUsers((prevState) => ({
+      ...prevState,
+      [username]: !prevState[username],
+    }));
+  };
 
-    return (
-        <View style={{ flex: 1, padding: 20 }}>
-            <Text style={{ fontSize: 35, marginBottom: 20 }}>Invite Players</Text>
-            <FlatList
-                data={users}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                        <CheckBox
-                            checked={!!selectedUsers[item.id]}
-                            onPress={() => toggleSelection(item.id)}
-                        />
-                        <Text style={{ fontSize: 22 }}>{item.username}</Text>
-                    </View>
-                )}
-            />
-            <TouchableOpacity onPress={handleInvite} style={{ marginTop: 20 }}>
-                <View style={{ backgroundColor: 'blue', padding: 15, borderRadius: 5 }}>
-                    <Text style={{ color: 'white', textAlign: 'center', fontSize: 18 }}>Invite Selected Users</Text>
-                </View>
-            </TouchableOpacity>
-        </View>
+  const handleInvite = async () => {
+    const invitedUsers = Object.keys(selectedUsers).filter(
+      (username) => selectedUsers[username]
     );
-};
 
+    // Bygg huntData från parametrarna och de valda användarna
+    const huntData = {
+      name: huntName, // Namnet på jakten
+      time: estimatedTime, // Estimerad tid för jakten
+      invitedUsers: invitedUsers, // Lista över inbjudna användare
+    };
+
+    try {
+      // Skicka huntData och huntImage till backend för att spara
+      await storeHunt(huntData, iconUri);
+      console.log("Hunt created and saved successfully!");
+      // Navigera användaren till en annan sida om du vill, t.ex. hem
+      navigation.navigate("Home");
+    } catch (error) {
+      console.error("Failed to create and save hunt:", error);
+    }
+  };
+
+  return (
+    <View style={{ flex: 1, padding: 20 }}>
+      <Text style={{ fontSize: 35, marginBottom: 20 }}>Invite Players</Text>
+      <FlatList
+        data={users}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 10,
+            }}
+          >
+            <CheckBox
+              checked={!!selectedUsers[item.username]} // Ändra till item.username
+              onPress={() => toggleSelection(item.username)} // Ändra till item.username
+            />
+            <Text style={{ fontSize: 22 }}>{item.username}</Text>
+          </View>
+        )}
+      />
+      <TouchableOpacity onPress={handleInvite} style={{ marginTop: 20 }}>
+        <View style={{ backgroundColor: "blue", padding: 15, borderRadius: 5 }}>
+          <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
+            Invite Selected Users
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 export default InvitePlayers;

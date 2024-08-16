@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { StyleSheet, Text, View, Button, TextInput, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { storeUser, getUser } from "../util/http"; 
+import { storeUser, getUser } from "../util/http";
 
 const HomeScreen = ({ navigation }) => {
   useLayoutEffect(() => {
@@ -9,29 +9,24 @@ const HomeScreen = ({ navigation }) => {
       const userName = await AsyncStorage.getItem("username");
 
       if (userName === null) {
-        navigation.navigate('Login');
-      } 
-    } 
-    areyouloggedin()
-  })
+        navigation.navigate("Login");
+      }
+    };
+    areyouloggedin();
+  });
 
   const handleLogout = async () => {
     try {
       await AsyncStorage.clear();
-      navigation.navigate('Login');
+      navigation.navigate("Login");
     } catch (error) {
-      Alert.alert('Error logging out: ', error.message);
+      Alert.alert("Error logging out: ", error.message);
     }
-  }
+  };
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <Button
-          title="Logga ut"
-          onPress={handleLogout}
-        />
-      ),
+      headerRight: () => <Button title="Logga ut" onPress={handleLogout} />,
     });
   }, [navigation]);
 
