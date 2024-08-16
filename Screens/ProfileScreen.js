@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   StyleSheet,
@@ -9,18 +10,21 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { storeUser, getUser, changePic } from "../util/http";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { storeUser, getUser, updateUserProfileImage } from "../util/http"; 
 
 const ProfileScreen = ({ navigation }) => {
   const [profileImage, setProfileImage] = useState(null);
-  const [user, setUser] = useState({});
+  const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState("");
   const [uploading, setUploading] = useState(false);
 
   useLayoutEffect(() => {
     const fetchUserData = async () => {
       try {
         const storedUsername = await AsyncStorage.getItem("username");
+<<<<<<< HEAD
         console.log("storedUsername", storedUsername);
         if (storedUsername) {
           const user = await getUser(storedUsername);
@@ -28,6 +32,20 @@ const ProfileScreen = ({ navigation }) => {
 
           if (user) {
             setUser(user);
+=======
+        // console.log('username: ', userName);
+        
+        if (storedUsername) {
+          const user = await getUser(storedUsername); // Använd await här
+
+
+          if (user) {
+            // console.log("Användardata hämtad:", user);
+            setUsername(user.username);
+            setProfileImage(user.profileImageUrl || null);
+            setUserId(user.id)
+    
+>>>>>>> 64cf8aa0a1c3fae438b76da7f6b0896d4842b00e
           } else {
             Alert.alert(
               "Användare ej hittad",
@@ -45,6 +63,7 @@ const ProfileScreen = ({ navigation }) => {
         Alert.alert("Fel", "Misslyckades med att hämta användardata.");
       }
     };
+
 
     fetchUserData();
   }, []);
@@ -103,8 +122,10 @@ const ProfileScreen = ({ navigation }) => {
 
     try {
       setUploading(true);
+      console.log('User ID som används vid bilduppdatering:', userId);
       // const user = { username };
-      await changePic(user, profileImage);
+      await updateUserProfileImage(userId, profileImage);
+
       Alert.alert("Framgång", "Profilen har uppdaterats framgångsrikt.");
     } catch (error) {
       console.error("Fel vid sparande av profil:", error);
@@ -117,7 +138,7 @@ const ProfileScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profil</Text>
-      <Text style={styles.username}>Användarnamn: {user.username}</Text>
+      <Text style={styles.username}>Användarnamn: {username}</Text>
 
       {profileImage ? (
         <Image source={{ uri: profileImage }} style={styles.image} />

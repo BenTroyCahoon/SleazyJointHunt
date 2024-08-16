@@ -6,8 +6,15 @@ const storage = getStorage(app);
 const rootUrl =
   "https://sleazyjointhunt-default-rtdb.europe-west1.firebasedatabase.app/";
 
+<<<<<<< HEAD
 const defaultProfilePic =
   "https://firebasestorage.googleapis.com/v0/b/sleazyjointhunt.appspot.com/o/profileImages%2Fakkakabotto.png?alt=media&token=e1ad9298-51b1-4f2c-8a97-2cd74e168929";
+=======
+const defaultProfilePic = 
+  "https://firebasestorage.googleapis.com/v0/b/sleazyjointhunt.appspot.com/o/profileImages%2Fakkakabotto.png?alt=media&token=e1ad9298-51b1-4f2c-8a97-2cd74e168929"
+
+
+>>>>>>> 64cf8aa0a1c3fae438b76da7f6b0896d4842b00e
 
 const storeUser = async (user, imageUri = null) => {
   try {
@@ -23,10 +30,13 @@ const storeUser = async (user, imageUri = null) => {
 
     const userData = {
       ...user,
+<<<<<<< HEAD
       profileImageUrl,
+=======
+      profileImageUrl
+>>>>>>> 64cf8aa0a1c3fae438b76da7f6b0896d4842b00e
     };
 
-    // Använd "user" som endpoint
     await axios.post(`${rootUrl}/user.json`, userData);
     console.log("Användardata har sparats framgångsrikt.");
   } catch (error) {
@@ -52,7 +62,11 @@ const getUser = async (username) => {
 
     for (const key in users) {
       if (users[key].username === username) {
+<<<<<<< HEAD
         return { ...users[key], id: key };
+=======
+        return { ...users[key], id: key }
+>>>>>>> 64cf8aa0a1c3fae438b76da7f6b0896d4842b00e
       }
     }
     return null;
@@ -62,6 +76,41 @@ const getUser = async (username) => {
   }
 };
 
+<<<<<<< HEAD
+=======
+
+const updateUserProfileImage = async (userId, imageUri) => {
+  try {
+    if (!imageUri) {
+      throw new Error("Ingen bild att ladda upp.");
+    }
+
+    // Ladda upp bilden till Firebase Storage
+    const response = await fetch(imageUri);
+    const blob = await response.blob();
+    const imageRef = ref(storage, `profileImages/${Date.now()}-profile.jpg`);
+    await uploadBytes(imageRef, blob);
+    const profileImageUrl = await getDownloadURL(imageRef);
+
+    const currentUserResponse = await axios.get(`${rootUrl}/user/${userId}.json`);
+    const currentUserData = currentUserResponse.data;
+
+    await axios.put(`${rootUrl}/user/${userId}.json`, {
+      email: currentUserData.email,
+      password: currentUserData.password,
+      username: currentUserData.username,
+      profileImageUrl: profileImageUrl, // Endast profilbilden uppdateras
+    });
+
+    return profileImageUrl;
+  } catch (error) {
+    console.error("Fel vid uppdatering av profilbild:", error);
+    throw error;
+  }
+};
+
+// Hämta alla användare från databasen
+>>>>>>> 64cf8aa0a1c3fae438b76da7f6b0896d4842b00e
 const fetchAllUsers = async () => {
   try {
     const response = await axios.get(`${rootUrl}/user.json`);
@@ -105,5 +154,9 @@ const storeHunt = async (huntData, imageUri = null) => {
   }
 };
 
+<<<<<<< HEAD
 // Exportera alla funktioner som används i ditt projekt
 export { storeUser, getUser, fetchAllUsers, storeHunt, changePic };
+=======
+export { storeUser, getUser, fetchAllUsers, storeHunt, updateUserProfileImage };
+>>>>>>> 64cf8aa0a1c3fae438b76da7f6b0896d4842b00e

@@ -11,8 +11,13 @@ const LoginScreen = ({ navigation }) => {
     try {
       const user = await getUser(username);
       if (user && user.password === password) {
+<<<<<<< HEAD
         console.log("userb", user);
         await AsyncStorage.setItem("username", username);
+=======
+        // console.log("user", user)
+        await AsyncStorage.setItem('username', username)
+>>>>>>> 64cf8aa0a1c3fae438b76da7f6b0896d4842b00e
         navigation.navigate("Home");
       } else {
         Alert.alert("Login Failed", "User not found");
