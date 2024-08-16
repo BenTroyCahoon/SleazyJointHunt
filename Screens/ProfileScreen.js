@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   StyleSheet,
@@ -12,7 +11,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { storeUser, getUser, updateUserProfileImage } from "../util/http"; 
+import { storeUser, getUser, updateUserProfileImage } from "../util/http";
 
 const ProfileScreen = ({ navigation }) => {
   const [profileImage, setProfileImage] = useState(null);
@@ -24,28 +23,16 @@ const ProfileScreen = ({ navigation }) => {
     const fetchUserData = async () => {
       try {
         const storedUsername = await AsyncStorage.getItem("username");
-<<<<<<< HEAD
-        console.log("storedUsername", storedUsername);
-        if (storedUsername) {
-          const user = await getUser(storedUsername);
-          console.log("user", user);
-
-          if (user) {
-            setUser(user);
-=======
         // console.log('username: ', userName);
-        
+
         if (storedUsername) {
           const user = await getUser(storedUsername); // Använd await här
-
 
           if (user) {
             // console.log("Användardata hämtad:", user);
             setUsername(user.username);
             setProfileImage(user.profileImageUrl || null);
-            setUserId(user.id)
-    
->>>>>>> 64cf8aa0a1c3fae438b76da7f6b0896d4842b00e
+            setUserId(user.id);
           } else {
             Alert.alert(
               "Användare ej hittad",
@@ -63,7 +50,6 @@ const ProfileScreen = ({ navigation }) => {
         Alert.alert("Fel", "Misslyckades med att hämta användardata.");
       }
     };
-
 
     fetchUserData();
   }, []);
@@ -122,7 +108,7 @@ const ProfileScreen = ({ navigation }) => {
 
     try {
       setUploading(true);
-      console.log('User ID som används vid bilduppdatering:', userId);
+      console.log("User ID som används vid bilduppdatering:", userId);
       // const user = { username };
       await updateUserProfileImage(userId, profileImage);
 
