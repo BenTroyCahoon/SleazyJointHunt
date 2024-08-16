@@ -107,7 +107,7 @@ const ProfileScreen = ({ navigation }) => {
     try {
       setUploading(true);
       console.log('User ID som används vid bilduppdatering:', userId);
-      const user = { username };
+      // const user = { username };
       await updateUserProfileImage(userId, profileImage);
 
       Alert.alert("Framgång", "Profilen har uppdaterats framgångsrikt.");
@@ -122,7 +122,7 @@ const ProfileScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profil</Text>
-      <Text style={styles.username}>Användarnamn: {user.username}</Text>
+      <Text style={styles.username}>Användarnamn: {username}</Text>
 
       {profileImage ? (
         <Image source={{ uri: profileImage }} style={styles.image} />
