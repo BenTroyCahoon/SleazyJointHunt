@@ -101,6 +101,7 @@ const fetchAllUsers = async () => {
     return Object.keys(users).map((key) => ({
       ...users[key],
       username: users[key].username,
+      id: key 
     }));
   } catch (error) {
     console.error("Fel vid hämtning av användare:", error);
