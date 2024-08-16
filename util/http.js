@@ -101,7 +101,7 @@ const fetchAllUsers = async () => {
     return Object.keys(users).map((key) => ({
       ...users[key],
       username: users[key].username,
-      id: key 
+      id: key,
     }));
   } catch (error) {
     console.error("Fel vid hämtning av användare:", error);
@@ -138,4 +138,33 @@ const storeHunt = async (huntData, imageUri = null) => {
   }
 };
 
-export { storeUser, getUser, fetchAllUsers, storeHunt, updateUserProfileImage };
+const fetchUserHunts = async (userId) => {
+  try {
+    const response = await axios.get(`${rootUrl}/hunts.json`);
+    const hunts = response.data;
+
+    // Filtrera de hunts där användaren är antingen skaparen eller en av de inbjudna
+    const userHunts = Object.keys(hunts)
+      .map((key) => ({
+        ...hunts[key],
+        id: key,
+      }))
+      .filter(
+        (hunt) => hunt.creator === userId || hunt.invitedUsers.includes(userId)
+      );
+
+    return userHunts;
+  } catch (error) {
+    console.error("Error fetching hunts:", error);
+    return [];
+  }
+};
+
+export {
+  storeUser,
+  getUser,
+  fetchAllUsers,
+  storeHunt,
+  updateUserProfileImage,
+  fetchUserHunts,
+};
