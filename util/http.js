@@ -127,7 +127,6 @@ const storeHunt = async (huntData, imageUri = null) => {
       startPoint: huntData.startPoint,
       endPoint: huntData.endPoint,
       markers: huntData.markers,
-
     };
 
     const response = await axios.post(
@@ -147,12 +146,11 @@ const fetchAllHunts = async (userId) => {
     const response = await axios.get(`${rootUrl}/hunts.json`);
     const hunts = response.data;
 
-    const userHunts = Object.keys(hunts)
-      .map((key) => ({
-        ...hunts[key],
-        id: key,
-      }))
-      
+    const userHunts = Object.keys(hunts).map((key) => ({
+      ...hunts[key],
+      id: key,
+    }));
+
     return userHunts;
   } catch (error) {
     console.error("Error fetching hunts:", error);
@@ -164,27 +162,58 @@ const fetchActiveHunts = async (userId) => {
   try {
     const allHunts = await fetchAllHunts(userId);
     // console.log(allHunts)
-    const activeHunts = allHunts.filter((hunt) => 
-      hunt.invitedUsers && hunt.invitedUsers.includes(userId));
-  
-   //  const test = allHunts[0].invitedUsers.includes("-O4LX634G8loMBOHGv9M")
+    const activeHunts = allHunts.filter(
+      (hunt) => hunt.invitedUsers && hunt.invitedUsers.includes(userId)
+    );
+
+    //  const test = allHunts[0].invitedUsers.includes("-O4LX634G8loMBOHGv9M")
     return activeHunts;
   } catch (error) {
     console.error("Error fetching active hunts:", error);
     return [];
   }
-}
+};
 
+// const fetchPlannedHunts = async (userId) => {
+//   try {
+//     const allHunts = await fetchAllHunts(userId);
+//     const plannedHunts = allHunts.filter((hunt) => hunt.creator === userId);
+//     return plannedHunts;
+//   } catch (error) {
+//     console.error("Error fetching planned hunts:", error);
+//     return [];
+//   }
+// }
+
+// Lägg till denna funktion i http.js eller uppdatera den befintliga
 const fetchPlannedHunts = async (userId) => {
   try {
-    const allHunts = await fetchAllHunts(userId);
-    const plannedHunts = allHunts.filter((hunt) => hunt.creator === userId);
-    return plannedHunts;
+    const response = await axios.get(`${rootUrl}/hunts.json`);
+    const hunts = response.data;
+    return Object.keys(hunts)
+      .map((key) => ({
+        ...hunts[key],
+        id: key,
+      }))
+      .filter((hunt) => hunt.creator === userId); // Filtrerar hunts efter skapare
   } catch (error) {
     console.error("Error fetching planned hunts:", error);
     return [];
   }
-}
+};
+
+const getHuntById = async (huntId) => {
+  try {
+    const response = await axios.get(`${rootUrl}/hunts/${huntId}.json`);
+    if (response.data) {
+      return { ...response.data, id: huntId };
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching hunt by ID:", error);
+    throw error;
+  }
+};
 
 export {
   storeUser,
@@ -195,4 +224,5 @@ export {
   fetchAllHunts,
   fetchActiveHunts,
   fetchPlannedHunts,
+  getHuntById,
 };

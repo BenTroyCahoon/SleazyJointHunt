@@ -3,30 +3,30 @@ import { View, Button, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
 const MapScreen = ({ navigation, route }) => {
-    const { huntName, estimatedTime, iconUri } = route.params;
-    const [markers, setMarkers] = useState([]);
-    const [startPoint, setStartPoint] = useState(null);
-    const [endPoint, setEndPoint] = useState(null);
+  const { huntName, estimatedTime, iconUri } = route.params;
+  const [markers, setMarkers] = useState([]);
+  const [startPoint, setStartPoint] = useState(null);
+  const [endPoint, setEndPoint] = useState(null);
 
-    const handleMapPress = (e) => {
-        const { coordinate } = e.nativeEvent;
+  const handleMapPress = (e) => {
+    const { coordinate } = e.nativeEvent;
 
-        if (!startPoint) {
-            setStartPoint(coordinate);
-            Alert.alert("Start point set!");
-        } else if (!endPoint) {
-            setEndPoint(coordinate);
-            Alert.alert("End point set!");
-        } else {
-            setMarkers([...markers, coordinate]);
-        }
-    };
+    if (!startPoint) {
+      setStartPoint(coordinate);
+      Alert.alert("Start point set!");
+    } else if (!endPoint) {
+      setEndPoint(coordinate);
+      Alert.alert("End point set!");
+    } else {
+      setMarkers([...markers, coordinate]);
+    }
+  };
 
-    const handleContinue = () => {
-        if (!startPoint || !endPoint) {
-            Alert.alert("Please set both a start and end point.");
-            return;
-        }
+  const handleContinue = () => {
+    if (!startPoint || !endPoint) {
+      Alert.alert("Please set both a start and end point.");
+      return;
+    }
 
         navigation.navigate("InvitePlayers", {
             huntName,

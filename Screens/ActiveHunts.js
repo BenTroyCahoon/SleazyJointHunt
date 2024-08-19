@@ -39,7 +39,9 @@ const ActiveHunts = () => {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 30, marginBottom: 20 }}>Active Hunts fast fel</Text>
+      <Text style={{ fontSize: 30, marginBottom: 20 }}>
+        Active Hunts fast fel
+      </Text>
       <FlatList
         data={hunts}
         keyExtractor={(item) => item.id}
