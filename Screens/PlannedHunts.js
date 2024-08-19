@@ -68,13 +68,16 @@ const PlannedHunts = ({ navigation }) => {
         console.log("Fetched username:", username); // Kontrollera att username hämtas korrekt
 
         // Hämta användarens data baserat på användarnamn
-        const user = await getUser(username);
-        console.log("Fetched user:", user); // Kontrollera att user-objektet hämtas korrekt
-        setUserId(user.id);
+        // const user = await getUser(username);
+        // console.log("Fetched user:", user); // Kontrollera att user-objektet hämtas korrekt
+        // setUserId(user.id);
+        const fetchedUser = await getUser(username);
+        // console.log("Fetched user:", fetchedUser);
+        setUserId(fetchedUser.id);
 
         // Hämta planerade hunts för den inloggade användaren
-        const userHunts = await fetchPlannedHunts(user.id);
-        console.log("Fetched user hunts:", userHunts); // Kontrollera att hunts hämtas korrekt
+        const userHunts = await fetchPlannedHunts(fetchedUser.id);
+        // console.log("Fetched user hunts:", userHunts); // Kontrollera att hunts hämtas korrekt
         setHunts(userHunts);
       } catch (error) {
         console.error("Error loading hunts:", error);
@@ -86,13 +89,13 @@ const PlannedHunts = ({ navigation }) => {
 
   // Funktion för att hantera när en hunt trycks på
   const handleHuntPress = (hunt) => {
-    console.log("Navigating to HuntDetails with huntId:", hunt.id); // Kontrollera att rätt huntId skickas
+    // console.log("Navigating to HuntDetails with huntId:", hunt.id); // Kontrollera att rätt huntId skickas
     navigation.navigate("HuntDetails", { huntId: hunt.id });
   };
 
   // Renderingsfunktion för varje hunt i listan
   const renderItem = ({ item }) => {
-    console.log("Rendering hunt item:", item); // Kontrollera att varje item har korrekt data
+    // console.log("Rendering hunt item:", item); // Kontrollera att varje item har korrekt data
     return (
       <TouchableOpacity onPress={() => handleHuntPress(item)}>
         <View
@@ -105,7 +108,7 @@ const PlannedHunts = ({ navigation }) => {
           <Text style={{ fontSize: 20 }}>{item.name}</Text>
           <Text style={{ fontSize: 16, color: "gray" }}>Tid: {item.time}</Text>
           <Text style={{ fontSize: 16, color: "gray" }}>
-            Skapad av: {item.creator}
+            Skapad av: {item.creator.username}
           </Text>
         </View>
       </TouchableOpacity>
