@@ -124,6 +124,9 @@ const storeHunt = async (huntData, imageUri = null) => {
     const completeHuntData = {
       ...huntData,
       huntImageUrl,
+      startPoint: huntData.startPoint,
+      endPoint: huntData.endPoint,
+      markers: huntData.markers,
     };
 
     const response = await axios.post(
@@ -199,6 +202,19 @@ const fetchPlannedHunts = async (userId) => {
   }
 };
 
+const getHuntById = async (huntId) => {
+  try {
+    const response = await axios.get(`${rootUrl}/hunts/${huntId}.json`);
+    if (response.data) {
+      return { ...response.data, id: huntId };
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching hunt by ID:", error);
+    throw error;
+  }
+};
+
 export {
   storeUser,
   getUser,
@@ -208,4 +224,5 @@ export {
   fetchAllHunts,
   fetchActiveHunts,
   fetchPlannedHunts,
+  getHuntById,
 };

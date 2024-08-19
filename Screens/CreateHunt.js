@@ -216,7 +216,7 @@ const CreateHunt = ({ navigation }) => {
     }
 
     // Skicka data som props till nästa skärm
-    navigation.navigate("InvitePlayers", { huntName, estimatedTime, iconUri });
+    navigation.navigate("MapScreen", { huntName, estimatedTime, iconUri });
   };
 
   return (
