@@ -28,7 +28,6 @@ const MapScreen = ({ navigation, route }) => {
             return;
         }
 
-        // Skicka data till nästa skärm
         navigation.navigate("InvitePlayers", {
             huntName,
             estimatedTime,
@@ -45,10 +44,10 @@ const MapScreen = ({ navigation, route }) => {
                 style={{ flex: 1 }}
                 onPress={handleMapPress}
                 initialRegion={{
-                    latitude: 37.78825,
-                    longitude: -122.4324,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
+                    latitude: 57.7089, // Latitude för Göteborg
+                    longitude: 11.9746, // Longitude för Göteborg
+                    latitudeDelta: 0.0922, // Zoomnivå
+                    longitudeDelta: 0.0421, // Zoomnivå
                 }}
             >
                 {startPoint && (
