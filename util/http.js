@@ -124,6 +124,10 @@ const storeHunt = async (huntData, imageUri = null) => {
     const completeHuntData = {
       ...huntData,
       huntImageUrl,
+      startPoint: huntData.startPoint,
+      endPoint: huntData.endPoint,
+      markers: huntData.markers,
+
     };
 
     const response = await axios.post(

@@ -13,7 +13,9 @@ import { fetchAllUsers, getUser, storeHunt } from "../util/http";
 
 const InvitePlayers = ({ navigation, route }) => {
     // Hämta huntName, huntTime och huntImage från navigationsrutan
-    const { huntName, estimatedTime, iconUri, userId } = route.params;
+    const { huntName, estimatedTime, iconUri, userId, startPoint,
+        endPoint,
+        markers, } = route.params;
 
     const [users, setUsers] = useState([]); // Håller reda på användardata
     const [selectedUsers, setSelectedUsers] = useState({}); // Håller reda på valda användare
@@ -52,7 +54,7 @@ const InvitePlayers = ({ navigation, route }) => {
         const ID = user.id
 
         const sendInviteTo = Object.keys(selectedUsers)
-   
+
 
         //console.log('Selected users: ', selectedUsers)
 
@@ -62,6 +64,8 @@ const InvitePlayers = ({ navigation, route }) => {
             name: huntName,
             time: estimatedTime,
             invitedUsers: sendInviteTo,
+
+            places: {startPoint, endPoint, markers,}
         };
         //console.log('user ID:', ID)
         try {
