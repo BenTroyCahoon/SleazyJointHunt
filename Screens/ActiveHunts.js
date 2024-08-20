@@ -54,7 +54,7 @@
 // export default ActiveHunts;
 
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   fetchActiveHunts,
@@ -62,13 +62,16 @@ import {
   getUserById,
   fetchAllUsers,
 } from "../util/http";
+import { useNavigation } from "@react-navigation/native"; // Importera useNavigation
 
 const ActiveHunts = () => {
   const [hunts, setHunts] = useState([]);
-  const [users, setUsers] = useState({}); // State för att lagra användardata
+  const [users, setUsers] = useState({});
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Lägg till en loader state
-  const [error, setError] = useState(null); // Lägg till en error state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const navigation = useNavigation(); // Använd useNavigation hook
 
   useEffect(() => {
     const loadHunts = async () => {
@@ -84,25 +87,22 @@ const ActiveHunts = () => {
       //   console.error("Error loading hunts:", error);
       // }
       try {
-        setLoading(true); // Sätt loading till true innan vi börjar hämta data
+        setLoading(true);
 
         const username = await AsyncStorage.getItem("username");
         if (!username) throw new Error("Ingen användare inloggad");
 
-        // Hämta användaren baserat på användarnamn
         const user = await getUser(username);
         if (!user) throw new Error("Kunde inte hämta användare");
 
-        setCurrentUser(user); // Spara den inloggade användaren
+        setCurrentUser(user);
 
-        // Hämta aktiva jakter för den inloggade användaren
         const userHunts = await fetchActiveHunts(user.id);
         setHunts(userHunts);
 
-        // Hämta alla användare
         const allUsers = await fetchAllUsers();
         const userMap = allUsers.reduce((acc, user) => {
-          acc[user.id] = user; // Mappar användar-ID till användardata
+          acc[user.id] = user;
           return acc;
         }, {});
 
@@ -112,9 +112,9 @@ const ActiveHunts = () => {
           "Fel vid inläsning av jakter eller användare:",
           error.message
         );
-        setError(error.message); // Sätt felmeddelande
+        setError(error.message);
       } finally {
-        setLoading(false); // Sätt loading till false efter att datan har hämtats
+        setLoading(false);
       }
     };
 
@@ -122,16 +122,14 @@ const ActiveHunts = () => {
   }, []);
 
   const renderItem = ({ item }) => {
-    // Hämta deltagare, inklusive skaparen
     const participantIds = [item.creator, ...(item.invitedUsers || [])];
-
-    // Hämta deltagarnas namn
     const participantNames = participantIds.map((id) =>
       users[id] ? users[id].username : "Okänd"
     );
 
     return (
-      <View
+      <TouchableOpacity
+        onPress={() => navigation.navigate("ConfirmHunt", { huntId: item.id })} // Navigera till ConfirmHunt och skicka med huntId som parameter
         style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}
       >
         <Text style={{ fontSize: 20 }}>{item.name}</Text>
@@ -144,7 +142,7 @@ const ActiveHunts = () => {
             Kör solo! ensamfest är bäst fest
           </Text>
         ) : null}
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -169,7 +167,7 @@ const ActiveHunts = () => {
       <Text style={{ fontSize: 30, marginBottom: 20 }}>Aktiva Jakter</Text>
       <FlatList
         data={hunts}
-        keyExtractor={(item) => item.id.toString()} // Använd huntens ID som nyckel
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
       />
     </View>
