@@ -20,7 +20,7 @@ const PlannedHunts = ({ navigation }) => {
         setUserName(username)
 
         const allUsers = await fetchAllUsers();
-        const usersMap = allUsers.reduce((map, user) => {          map[user.id] = user.username; 
+        const usersMap = allUsers.reduce((map, user) => {map[user.id] = user.username; 
           return map;
         }, {});
         setUserMap(usersMap);
@@ -48,7 +48,7 @@ const PlannedHunts = ({ navigation }) => {
           <Image source={{ uri: item.huntImageUrl }} style={styles.image} />
           <View style={styles.infoContainer}>
             <Text style={styles.huntName}>{item.name}</Text>
-            <Text style={styles.huntTime}>Tid: {item.time}</Text>
+            <Text style={styles.huntTime}>Tid: {item.time} timmar</Text>
             <Text style={styles.huntCreator}>Skapad av: {creatorName}</Text>
           </View>
         </View>
