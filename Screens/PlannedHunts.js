@@ -58,7 +58,7 @@ const PlannedHunts = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{userName}'s planerade hunts</Text>
+      <Text style={styles.header}>Planerade hunts</Text>
       <FlatList
         data={hunts}
         keyExtractor={(item) => item.id.toString()}
