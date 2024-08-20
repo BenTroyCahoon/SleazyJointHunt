@@ -1,11 +1,74 @@
+// import React, { useEffect, useState } from "react";
+// import { View, Text, FlatList } from "react-native";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { fetchActiveHunts, getUser } from "../util/http";
+
+// const ActiveHunts = () => {
+//   const [hunts, setHunts] = useState([]);
+//   const [userId, setUserId] = useState(null);
+
+//   useEffect(() => {
+//     const loadHunts = async () => {
+//       try {
+//         const username = await AsyncStorage.getItem("username");
+
+//         const user = await getUser(username);
+//         setUserId(user.id);
+
+//         const userHunts = await fetchActiveHunts(user.id);
+//         setHunts(userHunts);
+//       } catch (error) {
+//         console.error("Error loading hunts:", error);
+//       }
+//     };
+
+//     loadHunts();
+//   }, []);
+
+//   const renderItem = ({ item }) => (
+//     <View
+//       style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}
+//     >
+//       <Text style={{ fontSize: 20 }}>{item.name}</Text>
+//       <Text style={{ fontSize: 16, color: "gray" }}>Tid: {item.time}</Text>
+//       <Text style={{ fontSize: 16, color: "gray" }}>
+//         Skapad av: {item.creator}
+//       </Text>
+//     </View>
+//   );
+
+//   return (
+//     <View style={{ flex: 1, padding: 20 }}>
+//       <Text style={{ fontSize: 30, marginBottom: 20 }}>
+//         Active Hunts fast fel
+//       </Text>
+//       <FlatList
+//         data={hunts}
+//         keyExtractor={(item) => item.id}
+//         renderItem={renderItem}
+//       />
+//     </View>
+//   );
+// };
+
+// export default ActiveHunts;
+
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fetchActiveHunts, getUser, getHuntById, getUserById} from "../util/http";
+import {
+  fetchActiveHunts,
+  getUser,
+  getUserById,
+  fetchAllUsers,
+} from "../util/http";
 
 const ActiveHunts = () => {
   const [hunts, setHunts] = useState([]);
-  const [userId, setUserId] = useState(null);
+  const [users, setUsers] = useState({}); // State för att lagra användardata
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Lägg till en loader state
+  const [error, setError] = useState(null); // Lägg till en error state
 
   useEffect(() => {
     const loadHunts = async () => {
@@ -21,75 +84,92 @@ const ActiveHunts = () => {
       //   console.error("Error loading hunts:", error);
       // }
       try {
-        // Hämta användarnamn från AsyncStorage
+        setLoading(true); // Sätt loading till true innan vi börjar hämta data
+
         const username = await AsyncStorage.getItem("username");
-        console.log("Fetched username från activeHunts:", username); // Kontrollera att username hämtas korrekt
-        const user = await getUser(username)
-        console.log('user ID from activeHunts: ', user.id)
-        setUserId(user.id)
+        if (!username) throw new Error("Ingen användare inloggad");
 
-        const userHunts = await fetchActiveHunts(user.username)
-        const huntsWithUsernames = await Promise.all(
-          userHunts.map(async (hunt) => {
-            const invitedUsers = Object.values(hunt.invitedUsers || []);
-            // console.log('invited users ', invitedUsers)
-            
-            const invitedUsernames = await Promise.all(
-              invitedUsers.map(async (userId) => {
-                const user = await getUserById(userId);
-                // console.log("Fetched User:", user); 
-                return user.username;
-              })
-            );
-            return { ...hunt, invitedUsernames };
-          })
-        );
+        // Hämta användaren baserat på användarnamn
+        const user = await getUser(username);
+        if (!user) throw new Error("Kunde inte hämta användare");
 
-        setHunts(huntsWithUsernames)
+        setCurrentUser(user); // Spara den inloggade användaren
 
-        console.log('User Hunts:', userHunts);
-console.log('Hunts with Usernames:', huntsWithUsernames);
+        // Hämta aktiva jakter för den inloggade användaren
+        const userHunts = await fetchActiveHunts(user.id);
+        setHunts(userHunts);
 
-        // // Hämta användarens data baserat på användarnamn
-        // const fetchedUser = await getUser(username);
-        // console.log("Fetched user:", fetchedUser); // Kontrollera att user-objektet hämtas korrekt
-        // setUserId(fetchedUser.id);
+        // Hämta alla användare
+        const allUsers = await fetchAllUsers();
+        const userMap = allUsers.reduce((acc, user) => {
+          acc[user.id] = user; // Mappar användar-ID till användardata
+          return acc;
+        }, {});
 
-        // // Hämta planerade hunts för den inloggade användaren
-        // const userHunts = await fetchActiveHunts(fetchedUser.id);
-        // console.log("Fetched user hunts:", userHunts); // Kontrollera att hunts hämtas korrekt
-        // setHunts(userHunts);
+        setUsers(userMap);
       } catch (error) {
-        console.error("Error loading hunts:", error);
+        console.error(
+          "Fel vid inläsning av jakter eller användare:",
+          error.message
+        );
+        setError(error.message); // Sätt felmeddelande
+      } finally {
+        setLoading(false); // Sätt loading till false efter att datan har hämtats
       }
     };
 
     loadHunts();
   }, []);
 
-  const renderItem = ({ item }) => (
-    <View style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>
-      <Text style={{ fontSize: 20 }}>{item.name}</Text>
-      <Text style={{ fontSize: 16, color: "gray" }}>Tid: {item.time}</Text>
-      <Text style={{ fontSize: 16, color: "gray" }}>Inbjudna spelare: </Text>
-      { item.invitedUsernames && item.invitedUsernames.length > 0 ? (
-        item.invitedPlayers.map((username, index) => (
-      <Text key={index} style={{ fontSize: 16, color: "gray" }}>
-        {username}
-      </Text>
-    ))
-    ) : (
-      <Text > inga inbjudna </Text>
-    )}
-    </View>
-  );
+  const renderItem = ({ item }) => {
+    // Hämta deltagare, inklusive skaparen
+    const participantIds = [item.creator, ...(item.invitedUsers || [])];
+
+    // Hämta deltagarnas namn
+    const participantNames = participantIds.map((id) =>
+      users[id] ? users[id].username : "Okänd"
+    );
+
+    return (
+      <View
+        style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}
+      >
+        <Text style={{ fontSize: 20 }}>{item.name}</Text>
+        <Text style={{ fontSize: 16, color: "gray" }}>Tid: {item.time}</Text>
+        <Text style={{ fontSize: 16, color: "gray" }}>
+          Deltagare: {participantNames.join(", ")}
+        </Text>
+        {participantIds.length === 1 && participantIds[0] === currentUser.id ? (
+          <Text style={{ fontSize: 16, color: "gray" }}>
+            Kör solo! ensamfest är bäst fest
+          </Text>
+        ) : null}
+      </View>
+    );
+  };
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Laddar...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Fel: {error}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 30, marginBottom: 20 }}>Active Hunts för {userId}</Text>
+      <Text style={{ fontSize: 30, marginBottom: 20 }}>Aktiva Jakter</Text>
       <FlatList
         data={hunts}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()} // Använd huntens ID som nyckel
         renderItem={renderItem}
       />
     </View>

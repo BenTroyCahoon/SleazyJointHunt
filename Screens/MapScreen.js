@@ -28,41 +28,41 @@ const MapScreen = ({ navigation, route }) => {
       return;
     }
 
-        navigation.navigate("InvitePlayers", {
-            huntName,
-            estimatedTime,
-            iconUri,
-            startPoint,
-            endPoint,
-            markers,
-        });
-    };
+    navigation.navigate("InvitePlayers", {
+      huntName,
+      estimatedTime,
+      iconUri,
+      startPoint,
+      endPoint,
+      markers,
+    });
+  };
 
-    return (
-        <View style={{ flex: 1 }}>
-            <MapView
-                style={{ flex: 1 }}
-                onPress={handleMapPress}
-                initialRegion={{
-                    latitude: 57.7089, // Latitude för Göteborg
-                    longitude: 11.9746, // Longitude för Göteborg
-                    latitudeDelta: 0.0922, // Zoomnivå
-                    longitudeDelta: 0.0421, // Zoomnivå
-                }}
-            >
-                {startPoint && (
-                    <Marker coordinate={startPoint} pinColor="green" title="Start" />
-                )}
-                {endPoint && (
-                    <Marker coordinate={endPoint} pinColor="red" title="End" />
-                )}
-                {markers.map((marker, index) => (
-                    <Marker key={index} coordinate={marker} pinColor="blue" />
-                ))}
-            </MapView>
-            <Button title="Continue" onPress={handleContinue} />
-        </View>
-    );
+  return (
+    <View style={{ flex: 1 }}>
+      <MapView
+        style={{ flex: 1 }}
+        onPress={handleMapPress}
+        initialRegion={{
+          latitude: 57.7089, // Latitude för Göteborg
+          longitude: 11.9746, // Longitude för Göteborg
+          latitudeDelta: 0.0922, // Zoomnivå
+          longitudeDelta: 0.0421, // Zoomnivå
+        }}
+      >
+        {startPoint && (
+          <Marker coordinate={startPoint} pinColor="green" title="Start" />
+        )}
+        {endPoint && (
+          <Marker coordinate={endPoint} pinColor="red" title="End" />
+        )}
+        {markers.map((marker, index) => (
+          <Marker key={index} coordinate={marker} pinColor="blue" />
+        ))}
+      </MapView>
+      <Button title="Continue" onPress={handleContinue} />
+    </View>
+  );
 };
 
 export default MapScreen;
