@@ -61,6 +61,26 @@ const getUser = async (username) => {
   }
 };
 
+const getUserById = async (id) => {
+  try {
+    if (!id) {
+      throw new Error("ID saknas");
+    }
+
+    const response = await axios.get(`${rootUrl}/user/${id}.json`);
+    if (response.data) {
+      return { ...response.data, id }; // Returnera användardata med ID
+    }
+    return null;
+  } catch (error) {
+    console.error(
+      `Fel vid hämtning av användare med ID ${id}:`,
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
+
 const updateUserProfileImage = async (userId, imageUri) => {
   try {
     if (!imageUri) {
@@ -174,18 +194,6 @@ const fetchActiveHunts = async (userId) => {
   }
 };
 
-// const fetchPlannedHunts = async (userId) => {
-//   try {
-//     const allHunts = await fetchAllHunts(userId);
-//     const plannedHunts = allHunts.filter((hunt) => hunt.creator === userId);
-//     return plannedHunts;
-//   } catch (error) {
-//     console.error("Error fetching planned hunts:", error);
-//     return [];
-//   }
-// }
-
-// Lägg till denna funktion i http.js eller uppdatera den befintliga
 const fetchPlannedHunts = async (userId) => {
   try {
     const response = await axios.get(`${rootUrl}/hunts.json`);
@@ -225,4 +233,5 @@ export {
   fetchActiveHunts,
   fetchPlannedHunts,
   getHuntById,
+  getUserById,
 };
