@@ -55,7 +55,14 @@
 // export default HuntDetails;
 
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, FlatList, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { getHuntById, fetchAllUsers } from "../util/http";
 
@@ -103,8 +110,7 @@ const HuntDetails = ({ route }) => {
   }
 
   const { places, huntImageUrl, name, time } = hunt;
-  const { startPoint, markers } = places;
-
+  const { startpoint, markers } = places;
 
   // console.log('creator',userMap[hunt.creator]);
 
@@ -145,7 +151,9 @@ const HuntDetails = ({ route }) => {
       <Image source={{ uri: hunt.huntImageUrl }} style={styles.image} />
       <Text style={styles.title}>{hunt.name}</Text>
       <Text style={styles.time}>Tid: {hunt.time}</Text>
-      <Text style={styles.creator}>Skapad av: {userMap[hunt.creator]?.username || "Okänd skapare"}</Text>
+      <Text style={styles.creator}>
+        Skapad av: {userMap[hunt.creator]?.username || "Okänd skapare"}
+      </Text>
       <Text style={styles.subtitle}>Deltagare:</Text>
       {invitedUsers.length > 0 ? (
         <FlatList
@@ -162,13 +170,13 @@ const HuntDetails = ({ route }) => {
         <MapView
           style={styles.map}
           initialRegion={{
-            latitude: startPoint.latitude,
-            longitude: startPoint.longitude,
+            latitude: startpoint.latitude,
+            longitude: startpoint.longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
         >
-          <Marker coordinate={startPoint} title="Startpunkt" />
+          <Marker coordinate={startpoint} title="Startpunkt" />
           {markers.map((marker, index) => (
             <Marker
               key={index}
@@ -186,22 +194,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#F5F5F5', // Bakgrundsfärg för hela skärmen
+    backgroundColor: "#F5F5F5", // Bakgrundsfärg för hela skärmen
   },
   image: {
-    width: '100%',
+    width: "100%",
     height: 200, // Sätt ett fast höjd för bilden
     borderRadius: 10,
     marginBottom: 15,
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   time: {
     fontSize: 20,
-    color: 'gray',
+    color: "gray",
     marginBottom: 10,
   },
   creator: {
@@ -210,15 +218,15 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginVertical: 10,
   },
   user: {
     fontSize: 16,
-    color: 'gray',
+    color: "gray",
   },
   map: {
-    width: '100%',
+    width: "100%",
     height: 300, // Sätt ett fast höjd för kartan
     borderRadius: 10,
     marginTop: 15,
