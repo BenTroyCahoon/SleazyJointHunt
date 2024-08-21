@@ -23,6 +23,7 @@ import InvitePlayers from "./Screens/InvitePlayers";
 import HuntDetails from "./Screens/Huntdetails";
 import MapScreen from "./Screens/MapScreen";
 import ConfirmHunt from "./Screens/ConfirmHunt";
+import OnGoingHunts from "./Screens/onGoingHunts";
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +59,7 @@ export default function App() {
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="MapScreen" component={MapScreen} />
           <Stack.Screen name="ConfirmHunt" component={ConfirmHunt} />
+          <Stack.Screen name="OnGoingHunts" component={OnGoingHunts} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

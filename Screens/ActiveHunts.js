@@ -122,6 +122,7 @@ const ActiveHunts = () => {
   }, []);
 
   const renderItem = ({ item }) => {
+    console.log("item", item.id);
     const participantIds = [item.creator, ...(item.invitedUsers || [])];
     const participantNames = participantIds.map((id) =>
       users[id] ? users[id].username : "Okänd"

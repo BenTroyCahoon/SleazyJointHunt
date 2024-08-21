@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, FlatList, Dimensions, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { getHuntById, fetchAllUsers } from "../util/http";
 
@@ -49,13 +57,12 @@ const HuntDetails = ({ route }) => {
   const { places, huntImageUrl, name, time } = hunt;
   const { startPoint, markers, endPoint } = places;
 
-
-
   const latitudeDelta = 0.0922;
   const longitudeDelta = 0.0421;
-  const latitudeMid = (startPoint.latitude + (endPoint?.latitude || startPoint.latitude)) / 2;
-  const longitudeMid = (startPoint.longitude + (endPoint?.longitude || startPoint.longitude)) / 2;
-
+  const latitudeMid =
+    (startPoint.latitude + (endPoint?.latitude || startPoint.latitude)) / 2;
+  const longitudeMid =
+    (startPoint.longitude + (endPoint?.longitude || startPoint.longitude)) / 2;
 
   return (
     <ScrollView style={styles.container}>
@@ -64,7 +71,9 @@ const HuntDetails = ({ route }) => {
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{name}</Text>
           <Text style={styles.time}>Tid: {time} timmar</Text>
-          <Text style={styles.creator}>Skapad av: {userMap[hunt.creator]?.username || "Okänd skapare"}</Text>
+          <Text style={styles.creator}>
+            Skapad av: {userMap[hunt.creator]?.username || "Okänd skapare"}
+          </Text>
           <Text style={styles.subtitle}>Deltagare:</Text>
           {invitedUsers.length > 0 ? (
             invitedUsers.map((user, index) => (
@@ -97,37 +106,30 @@ const HuntDetails = ({ route }) => {
           />
         ))}
         {endPoint && (
-          <Marker
-            coordinate={endPoint}
-            title="Slutpunkt"
-            pinColor="red"
-          />
+          <Marker coordinate={endPoint} title="Slutpunkt" pinColor="red" />
         )}
       </MapView>
     </ScrollView>
-
   );
 };
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
-    backgroundColor: '#9bc39e', 
+    backgroundColor: "#9bc39e",
     padding: 20,
   },
   image: {
-    width: '100%',
+    width: "100%",
     height: 200,
     borderRadius: 12,
     marginBottom: 15,
-
   },
   detailsContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
@@ -135,33 +137,33 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#275829',
+    fontWeight: "bold",
+    color: "#275829",
     marginBottom: 10,
   },
   time: {
     fontSize: 18,
-    color: '#43A047',
+    color: "#43A047",
     marginBottom: 10,
   },
   creator: {
     fontSize: 16,
-    color: '#853923',
+    color: "#853923",
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#275829',
+    fontWeight: "bold",
+    color: "#275829",
     marginVertical: 10,
   },
   user: {
     fontSize: 16,
-    color: '#43A047',
+    color: "#43A047",
     marginBottom: 5,
   },
   map: {
-    width: '100%',
+    width: "100%",
     height: 300,
     borderRadius: 12,
     marginTop: 15,
