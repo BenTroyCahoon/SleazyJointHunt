@@ -10,13 +10,14 @@ const ConfirmHunt = ({ route }) => {
   const [error, setError] = useState(null);
   const navigation = useNavigation();
 
+  const { huntId } = route.params;
+
   useEffect(() => {
     const loadHuntDetails = async () => {
       try {
-        const { huntId } = route.params;
         const details = await getHuntById(huntId);
         setHuntDetails(details);
-
+        console.log("huntiiiiiiid", huntId);
         // Hämta information om alla deltagare
         const participantData = await Promise.all(
           details.invitedUsers.map((userId) => getUserById(userId))
@@ -46,7 +47,7 @@ const ConfirmHunt = ({ route }) => {
           text: "Ja",
           onPress: () => {
             Alert.alert("Du är nu registrerad för jakten!");
-            navigation.navigate("OnGoingHunts"); 
+            navigation.navigate("OnGoingHunts", { huntId });
           },
         },
       ]

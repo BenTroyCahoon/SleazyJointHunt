@@ -31,7 +31,7 @@ const HuntDetails = ({ route }) => {
           return acc;
         }, {});
         setUserMap(usersMap);
-
+        console.log("huntdata", huntData);
         // Hämta detaljerna om inbjudna användare
         const huntInvitedUsers = huntData.invitedUsers.map(
           (userId) => usersMap[userId]

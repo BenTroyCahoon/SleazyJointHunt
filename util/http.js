@@ -178,19 +178,20 @@ const fetchAllHunts = async (userId) => {
   }
 };
 
-// HÄR JOBBAR DU CARRO 
+// HÄR JOBBAR DU CARRO
 const fetchActiveHunts = async (userId) => {
   try {
     const allHunts = await fetchAllHunts(userId);
     // console.log('alla hunts: ', allHunts)
-    console.log('user ID från http: ', userId)
+    console.log("user ID från http: ", userId);
 
-    const activeHunts = allHunts.filter(hunt => {
+    const activeHunts = allHunts.filter((hunt) => {
       //console.log("Checking Hunt:", hunt); // För att se vad vi jobbar med
       //console.log('inbjudna spelare: ', hunt.invitedUsers)
-      return Array.isArray(hunt.invitedUsers) && hunt.invitedUsers.includes(userId);
+      return (
+        Array.isArray(hunt.invitedUsers) && hunt.invitedUsers.includes(userId)
+      );
     });
-
 
     //  const test = allHunts[0].invitedUsers.includes("-O4LX634G8loMBOHGv9M")
     return activeHunts;
