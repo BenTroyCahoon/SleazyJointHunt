@@ -23,7 +23,7 @@ import InvitePlayers from "./Screens/InvitePlayers";
 import HuntDetails from "./Screens/Huntdetails";
 import MapScreen from "./Screens/MapScreen";
 import ConfirmHunt from "./Screens/ConfirmHunt";
-import OnGoingHunts from "./Screens/onGoingHunts";
+import OnGoingHunts from "./Screens/OnGoingHunts";
 
 const Stack = createNativeStackNavigator();
 
