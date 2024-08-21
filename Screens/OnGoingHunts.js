@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Alert, Button, ActivityIndicator } from "react-native";
+import { View, Text, Button, Alert, ActivityIndicator } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { getHuntById } from "../util/http"; // Importera metoden för att hämta jaktens detaljer
+import { getHuntById } from "../util/http";
+import { Camera } from "expo-camera";
 
 const OnGoingHunt = ({ route, navigation }) => {
   const [huntDetails, setHuntDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null);
+  const [camera, setCamera] = useState(null);
 
   const { huntId } = route.params;
 
   useEffect(() => {
-    console.log("huntID", huntId);
     const fetchHuntDetails = async () => {
       try {
-        console.log("Fetching details for hunt ID:", huntId);
         const details = await getHuntById(huntId);
         setHuntDetails(details);
-        console.log("Fetched hunt details:", details);
       } catch (err) {
         setError("Kunde inte hämta jaktens detaljer.");
-        console.error("Error fetching hunt details:", err);
       } finally {
         setLoading(false);
       }
@@ -28,6 +27,40 @@ const OnGoingHunt = ({ route, navigation }) => {
 
     fetchHuntDetails();
   }, [huntId]);
+
+  useEffect(() => {
+    const requestCameraPermissions = async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    };
+
+    requestCameraPermissions();
+  }, []);
+
+  const handleMarkerPress = async (coordinate) => {
+    if (!hasPermission) {
+      Alert.alert("Ingen kameratillgång", "Tillåt kameran för att tilder.");
+      return;
+    }
+
+    Alert.alert("Ta ett foto", "Vill du ta ett foto vid denna plats?", [
+      {
+        text: "Nej",
+        style: "cancel",
+      },
+      {
+        text: "Ja",
+        onPress: async () => {
+          // Förbered kamera för att ta ett foto
+          if (camera) {
+            const photo = await camera.takePictureAsync();
+            console.log("Foto tagit:", photo.uri);
+            // Här kan du spara bilden till databasen eller något annat
+          }
+        },
+      },
+    ]);
+  };
 
   if (loading) {
     return (
@@ -41,11 +74,11 @@ const OnGoingHunt = ({ route, navigation }) => {
   if (error || !huntDetails) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Fel: {error || "Hunt details not found."}</Text>
+        <Text>Fel: {error || "Jaktens detaljer kunde inte laddas."}</Text>
       </View>
     );
   }
-  console.log(huntDetails);
+
   return (
     <View style={{ flex: 1 }}>
       <MapView
@@ -61,15 +94,22 @@ const OnGoingHunt = ({ route, navigation }) => {
           coordinate={huntDetails.places.startPoint}
           pinColor="green"
           title="Start"
+          onPress={() => handleMarkerPress(huntDetails.places.startPoint)}
         />
         <Marker
           coordinate={huntDetails.places.endPoint}
           pinColor="red"
           title="End"
+          onPress={() => handleMarkerPress(huntDetails.places.endPoint)}
         />
         {huntDetails.places.markers &&
           huntDetails.places.markers.map((marker, index) => (
-            <Marker key={index} coordinate={marker} pinColor="blue" />
+            <Marker
+              key={index}
+              coordinate={marker}
+              pinColor="blue"
+              onPress={() => handleMarkerPress(marker)}
+            />
           ))}
       </MapView>
 
