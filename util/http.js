@@ -168,13 +168,13 @@ const fetchAllHunts = async (userId) => {
   }
 };
 
-// HÄR JOBBAR DU CARRO 
+// HÄR JOBBAR DU CARRO
 const fetchActiveHunts = async (userId) => {
   try {
     const allHunts = await fetchAllHunts(userId);
-    const activeHunts = allHunts.filter(hunt => {
+    const activeHunts = allHunts.filter((hunt) => {
       // Kontrollera att hunt.invitedUsers är en array och plocka ut ids
-      const invitedUserIds = hunt.invitedUsers.map(user => user.id);
+      const invitedUserIds = hunt.invitedUsers.map((user) => user.id);
       return invitedUserIds.includes(userId);
     });
 
