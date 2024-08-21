@@ -14,46 +14,39 @@ import { getHuntById, fetchAllUsers } from "../util/http";
 const HuntDetails = ({ route }) => {
   const { huntId } = route.params;
   const [hunt, setHunt] = useState(null);
-  const [userMap, setUserMap] = useState({});
+  const [huntCreator, setHuntCreator] = useState("Okänd skapare")
   const [invitedUsers, setInvitedUsers] = useState([]);
 
-  console.log('inne i hd')
+  console.log('inne i hd 1')
 
   useEffect(() => {
     const fetchHuntAndUsers = async () => {
-      console.log('inne i fetchHuntAndUsers')
+      console.log('inne i fetchHuntAndUsers 2')
       try {
-        console.log('inne i try')
+        console.log('inne i try 3')
         const huntData = await getHuntById(huntId);
-        console.log('huntdata.creator: ', huntData.creator)
+        console.log('huntdata.creator: 4', huntData.creator)
         setHunt(huntData);
 
         const allUsers = await fetchAllUsers();
 
-        // Skapa en map av användare för snabb uppslagning
         const usersMap = allUsers.reduce((acc, user) => {
           acc[user.id] = user;
+          console.log('acc: 5')
           return acc;
         }, {});
-        setUserMap(usersMap);
-
-        console.log("huntdata HD: ", huntData);
-        
-        // Hämta detaljerna om inbjudna användare
-        // const huntInvitedUsers = huntData.invitedUsers.map(
-        //   (userId) => usersMap[userId]
-        // );
+        const creator = usersMap[hunt.creator]
+        setHuntCreator(creator.username)
 
         if (Array.isArray(huntData.invitedUsers)) {
           const huntInvitedUsers = huntData.invitedUsers.map(
-            (userObj) => usersMap[userObj.id] // Använd userObj.id för att slå upp i usersMap
+            (userObj) => usersMap[userObj.id] 
           );
-          console.log('huntinvitedUsers HD: ', huntInvitedUsers)
+          console.log('huntinvitedUsers HD: 7', huntInvitedUsers)
   
-          // Filtrera ut eventuella undefined-värden som kan uppkomma om användaren inte hittas
           setInvitedUsers(huntInvitedUsers.filter(user => user !== undefined));
         } else {
-          setInvitedUsers([]); // Om invitedUsers inte är en array, sätt en tom array
+          setInvitedUsers([]); 
         }
 
       } catch (error) {
@@ -83,8 +76,6 @@ const HuntDetails = ({ route }) => {
   const longitudeMid =
     (startPoint.longitude + (endPoint?.longitude || startPoint.longitude)) / 2;
 
-    console.log('user: ',user)
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.contentContainer}>
@@ -93,7 +84,7 @@ const HuntDetails = ({ route }) => {
           <Text style={styles.title}>{name}</Text>
           <Text style={styles.time}>Tid: {time} timmar</Text>
           <Text style={styles.creator}>
-            Skapad av: {userMap[hunt.creator] || "Okänd skapare"}
+            Skapad av: {huntCreator}
           </Text>
           <Text style={styles.subtitle}>Deltagare:</Text>
           {invitedUsers.length > 0 ? (
