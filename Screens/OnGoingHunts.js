@@ -3,7 +3,7 @@ import { View, Text, Alert, Button, ActivityIndicator } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
-import { getHuntById } from "../util/http";
+import { getHuntById, updateHuntStatus } from "../util/http"; // Anta att du har en metod för att uppdatera jaktstatus
 
 const OnGoingHunts = ({ route, navigation }) => {
   const [huntDetails, setHuntDetails] = useState(null);
@@ -38,7 +38,7 @@ const OnGoingHunts = ({ route, navigation }) => {
     );
   };
 
-  const handleMarkerPress = async (markerType, index = null) => {
+  const handleMarkerPress = async (index) => {
     const hasPermission = await requestPermissions();
     if (!hasPermission) {
       Alert.alert("Behörighet", "Kameraåtkomst är inte tillåten.");
@@ -47,36 +47,57 @@ const OnGoingHunts = ({ route, navigation }) => {
 
     Alert.alert("Ta ett foto", "Vill du ta ett foto vid denna plats?", [
       { text: "Avbryt", style: "cancel" },
-      { text: "Ja", onPress: async () => await takePicture(markerType, index) },
+      { text: "Ja", onPress: async () => await takePicture(index) },
     ]);
   };
 
-  const takePicture = async (markerType, index) => {
-    const photo = await ImagePicker.launchCameraAsync({
-      allowsEditing: false,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  const takePicture = async (index) => {
+    try {
+      const photo = await ImagePicker.launchCameraAsync({
+        allowsEditing: false,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-    if (!photo.cancelled) {
-      await MediaLibrary.createAssetAsync(photo.uri);
-      Alert.alert("Foto tagits", "Bilden har sparats i din fotogalleri.");
+      if (!photo.cancelled && photo.uri) {
+        if (typeof photo.uri === "string") {
+          await MediaLibrary.createAssetAsync(photo.uri);
+          Alert.alert("Foto tagits", "Bilden har sparats i din fotogalleri.");
 
-      if (markerType === "startPoint" || markerType === "endPoint") {
-        setCompletedMarkers([...completedMarkers, markerType]);
-      } else if (markerType === "marker") {
-        setCompletedMarkers([...completedMarkers, `marker-${index}`]);
+          // Markera platsen som avklarad
+          setCompletedMarkers([...completedMarkers, index]);
+
+          // Kontrollera om alla markers är avklarade
+          if (
+            completedMarkers.length + 1 ===
+            (huntDetails.places.markers
+              ? huntDetails.places.markers.length
+              : 0) +
+              2
+          ) {
+            // +2 för startPoint och endPoint
+            // Uppdatera jakten till "avslutad"
+            await updateHuntStatus(huntId, { status: "finished" });
+            Alert.alert(
+              "Jakt Avslutad",
+              "Alla marker är avklarade. Jakten har avslutats."
+            );
+            navigation.goBack(); // Gå tillbaka till föregående skärm
+          }
+        } else {
+          Alert.alert("Fel", "Ogiltig URI för bilden.");
+        }
+      } else {
+        Alert.alert("Avbruten", "Bildtagning avbröts.");
       }
+    } catch (error) {
+      console.error("Error taking picture:", error);
+      Alert.alert("Fel", "Kunde inte ta bilden.");
     }
   };
 
-  const isMarkerCompleted = (markerType, index = null) => {
-    if (markerType === "startPoint" || markerType === "endPoint") {
-      return completedMarkers.includes(markerType);
-    } else if (markerType === "marker") {
-      return completedMarkers.includes(`marker-${index}`);
-    }
-    return false;
+  const isMarkerCompleted = (index) => {
+    return completedMarkers.includes(index);
   };
 
   if (loading) {
@@ -109,24 +130,24 @@ const OnGoingHunts = ({ route, navigation }) => {
       >
         <Marker
           coordinate={huntDetails.places.startPoint}
-          pinColor={isMarkerCompleted("startPoint") ? "gray" : "green"}
-          title={isMarkerCompleted("startPoint") ? "Start (Avklarad)" : "Start"}
-          onPress={() => handleMarkerPress("startPoint")}
+          pinColor={isMarkerCompleted("start") ? "gray" : "green"}
+          title={isMarkerCompleted("start") ? "Start avklarad" : "Start"}
+          onPress={() => handleMarkerPress("start")}
         />
         <Marker
           coordinate={huntDetails.places.endPoint}
-          pinColor={isMarkerCompleted("endPoint") ? "gray" : "red"}
-          title={isMarkerCompleted("endPoint") ? "End (Avklarad)" : "End"}
-          onPress={() => handleMarkerPress("endPoint")}
+          pinColor={isMarkerCompleted("end") ? "gray" : "red"}
+          title={isMarkerCompleted("end") ? "Slut avklarad" : "Slut"}
+          onPress={() => handleMarkerPress("end")}
         />
         {huntDetails.places.markers &&
           huntDetails.places.markers.map((marker, index) => (
             <Marker
               key={index}
               coordinate={marker}
-              pinColor={isMarkerCompleted("marker", index) ? "gray" : "blue"}
-              title={isMarkerCompleted("marker", index) ? "Avklarad" : "Marker"}
-              onPress={() => handleMarkerPress("marker", index)}
+              pinColor={isMarkerCompleted(index) ? "gray" : "blue"}
+              onPress={() => handleMarkerPress(index)}
+              title={isMarkerCompleted(index) ? "Avklarad" : "Marker"}
             />
           ))}
       </MapView>
