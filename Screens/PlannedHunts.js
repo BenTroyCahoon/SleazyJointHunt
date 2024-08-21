@@ -9,6 +9,8 @@ const PlannedHunts = ({ navigation }) => {
   const [userMap, setUserMap] = useState({}); 
   const [userName, setUserName] = useState({}); 
 
+  console.log('dhhudsau')
+
   useEffect(() => {
     const loadHunts = async () => {
       try {
