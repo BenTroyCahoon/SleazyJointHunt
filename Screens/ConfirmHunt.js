@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, Alert, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  Alert,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { getHuntById, getUserById } from "../util/http"; // Importera getUserById
 import MapView, { Marker } from "react-native-maps";
@@ -11,17 +18,19 @@ const ConfirmHunt = ({ route }) => {
   const [error, setError] = useState(null);
   const navigation = useNavigation();
 
+  const { huntId } = route.params;
+
   useEffect(() => {
     const loadHuntDetails = async () => {
       try {
         const { huntId } = route.params;
-  
+
         const details = await getHuntById(huntId);
         setHuntDetails(details);
-  
+
         // Hämta användare från invitedUsers som nu är objekt med id
         const participantData = await Promise.all(
-          details.invitedUsers.map(user => getUserById(user.id))
+          details.invitedUsers.map((user) => getUserById(user.id))
         );
         setParticipants(participantData);
       } catch (err) {
@@ -31,10 +40,9 @@ const ConfirmHunt = ({ route }) => {
         setLoading(false);
       }
     };
-  
+
     loadHuntDetails();
   }, [route.params]);
-  
 
   const confirmParticipation = () => {
     Alert.alert(
@@ -49,7 +57,7 @@ const ConfirmHunt = ({ route }) => {
           text: "Ja",
           onPress: () => {
             Alert.alert("Du är nu registrerad för jakten!");
-            navigation.navigate("OnGoingHunts");
+            navigation.navigate("OnGoingHunts", { huntId });
           },
         },
       ]
@@ -75,12 +83,10 @@ const ConfirmHunt = ({ route }) => {
   const { name, time, places } = huntDetails;
   const { startPoint, endPoint, markers } = places;
 
-
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.header}>Bekräfta Hunt</Text>
       <View style={styles.itemContainer}>
-
         <View style={styles.infoContainer}>
           <Text style={styles.huntName}>{name}</Text>
           <Text style={styles.huntTime}>Uppskattad tid: </Text>
@@ -99,7 +105,8 @@ const ConfirmHunt = ({ route }) => {
           latitude: (startPoint.latitude + endPoint.latitude) / 2,
           longitude: (startPoint.longitude + endPoint.longitude) / 2,
           latitudeDelta: Math.abs(startPoint.latitude - endPoint.latitude) * 2,
-          longitudeDelta: Math.abs(startPoint.longitude - endPoint.longitude) * 2,
+          longitudeDelta:
+            Math.abs(startPoint.longitude - endPoint.longitude) * 2,
         }}
       >
         <Marker coordinate={startPoint} title="Startpunkt" pinColor="green" />
@@ -117,7 +124,11 @@ const ConfirmHunt = ({ route }) => {
       </MapView>
 
       <View style={styles.buttonContainer}>
-        <Button title="Bekräfta" onPress={confirmParticipation} color="#275829" />
+        <Button
+          title="Bekräfta"
+          onPress={confirmParticipation}
+          color="#275829"
+        />
       </View>
     </ScrollView>
   );
@@ -142,12 +153,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   itemContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 10,
     marginBottom: 20,
     borderRadius: 8,
-    backgroundColor: '#fbfbfbff',
-    shadowColor: '#000',
+    backgroundColor: "#fbfbfbff",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
@@ -155,21 +166,21 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   huntName: {
     fontSize: 23,
-    color: '#2C6B2F',
-    fontWeight: 'bold',
+    color: "#2C6B2F",
+    fontWeight: "bold",
     paddingBottom: 5,
   },
   huntTime: {
     fontSize: 16,
-    color: '#43A047',
+    color: "#43A047",
   },
   participants: {
     fontSize: 16,
-    color: '#853923',
+    color: "#853923",
     marginTop: 5,
   },
   subHeader: {
@@ -189,7 +200,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
 export default ConfirmHunt;
-
-
