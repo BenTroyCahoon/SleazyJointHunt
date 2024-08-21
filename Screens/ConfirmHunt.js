@@ -1,8 +1,7 @@
-//
 import React, { useEffect, useState } from "react";
 import { View, Text, Button, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { getHuntById, getUserById, fetchAllUsers } from "../util/http";
+import { getHuntById, getUserById } from "../util/http"; // Importera getUserById
 
 const ConfirmHunt = ({ route }) => {
   const [huntDetails, setHuntDetails] = useState(null);
@@ -15,16 +14,14 @@ const ConfirmHunt = ({ route }) => {
     const loadHuntDetails = async () => {
       try {
         const { huntId } = route.params;
-        console.log("id", huntId);
         const details = await getHuntById(huntId);
         setHuntDetails(details);
 
         // Hämta information om alla deltagare
-        // const participantData = await Promise.all(
-        //   details.invitedUsers.map((userId) => getUserById(userId))
-        // );
-        // setParticipants(participantData);
-        // console.log("deltagare", participants);
+        const participantData = await Promise.all(
+          details.invitedUsers.map((userId) => getUserById(userId))
+        );
+        setParticipants(participantData);
       } catch (err) {
         setError("Kunde inte hämta jaktens detaljer.");
         console.error(err);
@@ -37,7 +34,6 @@ const ConfirmHunt = ({ route }) => {
   }, [route.params]);
 
   const confirmParticipation = () => {
-    console.log("godkänn");
     Alert.alert(
       "Bekräfta deltagande",
       "Är du säker på att du vill delta i denna jakt?",
@@ -49,9 +45,8 @@ const ConfirmHunt = ({ route }) => {
         {
           text: "Ja",
           onPress: () => {
-            console.log("uhuhuhu");
-            // Navigera till OnGoingHunt med jaktens ID
-            navigation.navigate("OnGoingHunts");
+            Alert.alert("Du är nu registrerad för jakten!");
+            navigation.navigate("OnGoingHunts"); 
           },
         },
       ]

@@ -197,7 +197,11 @@ import MapView, { Marker } from "react-native-maps";
 // export default OnGoingHunts;
 
 const OnGoingHunts = ({ route }) => {
-  return <Text>HEJ</Text>;
+  return (
+  <View>
+    <Text>HEJ</Text>
+  </View>
+  )
 };
 
 export default OnGoingHunts;
