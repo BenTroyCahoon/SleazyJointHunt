@@ -53,15 +53,19 @@ const OnGoingHunts = ({ route, navigation }) => {
 
   const takePicture = async (index) => {
     try {
-      const photo = await ImagePicker.launchCameraAsync({
+      const result = await ImagePicker.launchCameraAsync({
         allowsEditing: false,
         aspect: [4, 3],
         quality: 1,
       });
 
-      if (!photo.cancelled && photo.uri) {
-        if (typeof photo.uri === "string") {
-          await MediaLibrary.createAssetAsync(photo.uri);
+      console.log("Photo result:", result);
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const photoUri = result.assets[0].uri;
+
+        if (typeof photoUri === "string") {
+          await MediaLibrary.createAssetAsync(photoUri);
           Alert.alert("Foto tagits", "Bilden har sparats i din fotogalleri.");
 
           // Markera platsen som avklarad
@@ -76,13 +80,12 @@ const OnGoingHunts = ({ route, navigation }) => {
               2
           ) {
             // +2 för startPoint och endPoint
-            // Uppdatera jakten till "avslutad"
             await updateHuntStatus(huntId, { status: "finished" });
             Alert.alert(
               "Jakt Avslutad",
               "Alla marker är avklarade. Jakten har avslutats."
             );
-            navigation.goBack(); // Gå tillbaka till föregående skärm
+            navigation.goBack();
           }
         } else {
           Alert.alert("Fel", "Ogiltig URI för bilden.");
