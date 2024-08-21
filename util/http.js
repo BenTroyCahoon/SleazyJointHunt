@@ -51,14 +51,13 @@ const getUser = async (username) => {
 };
 
 const getUserById = async (userId) => {
-  try {
-    //console.log('id http: ', userId)
-    if (!userId) {
+  if (!userId) {
       throw new Error("ID saknas");
     }
 
+  try {
     const response = await axios.get(`${rootUrl}/user/${userId}.json`);
-
+    console.log(`Response för ${userId}: `, response.data)
     if (response.data) {
       return { ...response.data, userId }; // Returnera användardata med ID
     }

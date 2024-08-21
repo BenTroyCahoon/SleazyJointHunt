@@ -57,12 +57,15 @@ const HuntDetails = ({ route }) => {
   const { places, huntImageUrl, name, time } = hunt;
   const { startPoint, markers, endPoint } = places;
 
+
   const latitudeDelta = 0.0922;
   const longitudeDelta = 0.0421;
   const latitudeMid =
     (startPoint.latitude + (endPoint?.latitude || startPoint.latitude)) / 2;
   const longitudeMid =
     (startPoint.longitude + (endPoint?.longitude || startPoint.longitude)) / 2;
+
+    console.log('user: ',user)
 
   return (
     <ScrollView style={styles.container}>
@@ -72,7 +75,7 @@ const HuntDetails = ({ route }) => {
           <Text style={styles.title}>{name}</Text>
           <Text style={styles.time}>Tid: {time} timmar</Text>
           <Text style={styles.creator}>
-            Skapad av: {userMap[hunt.creator]?.username || "Okänd skapare"}
+            Skapad av: {userMap[hunt.creator] || "Okänd skapare"}
           </Text>
           <Text style={styles.subtitle}>Deltagare:</Text>
           {invitedUsers.length > 0 ? (

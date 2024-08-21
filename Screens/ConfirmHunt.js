@@ -12,12 +12,15 @@ const ConfirmHunt = ({ route }) => {
   const navigation = useNavigation();
 
   useEffect(() => {
+    console.log('confirmGunt ')
     const loadHuntDetails = async () => {
       try {
         const { huntId } = route.params;
   
+
         const details = await getHuntById(huntId);
         setHuntDetails(details);
+        console.log('deltajer ',details)
   
         // Hämta användare från invitedUsers som nu är objekt med id
         const participantData = await Promise.all(
