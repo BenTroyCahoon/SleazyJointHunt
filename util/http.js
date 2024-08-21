@@ -57,7 +57,7 @@ const getUserById = async (userId) => {
 
   try {
     const response = await axios.get(`${rootUrl}/user/${userId}.json`);
-    console.log(`Response för ${userId}: `, response.data)
+    // console.log(`Response för ${userId}: `, response.data)
     if (response.data) {
       return { ...response.data, userId }; // Returnera användardata med ID
     }

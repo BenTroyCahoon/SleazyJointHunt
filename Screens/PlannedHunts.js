@@ -44,6 +44,7 @@ const PlannedHunts = ({ navigation }) => {
 
   const handleHuntPress = (hunt) => {
     navigation.navigate("HuntDetails", { huntId: hunt.id });
+    console.log('huntId som skickas till HD: ', hunt.id)
   };
 
   const renderItem = ({ item }) => {

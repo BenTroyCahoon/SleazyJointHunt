@@ -36,7 +36,7 @@ const ConfirmHunt = ({ route }) => {
         setParticipants(participantData);
       } catch (err) {
         setError("Kunde inte hämta jaktens detaljer.");
-        console.error("Error fetching hunt details:", err);
+        console.error("Error fetching hunt details CH:", err);
       } finally {
         setLoading(false);
       }

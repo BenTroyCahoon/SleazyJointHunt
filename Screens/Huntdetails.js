@@ -17,10 +17,15 @@ const HuntDetails = ({ route }) => {
   const [userMap, setUserMap] = useState({});
   const [invitedUsers, setInvitedUsers] = useState([]);
 
+  console.log('inne i hd')
+
   useEffect(() => {
     const fetchHuntAndUsers = async () => {
+      console.log('inne i fetchHuntAndUsers')
       try {
+        console.log('inne i try')
         const huntData = await getHuntById(huntId);
+        console.log('huntdata.creator: ', huntData.creator)
         setHunt(huntData);
 
         const allUsers = await fetchAllUsers();
@@ -31,15 +36,28 @@ const HuntDetails = ({ route }) => {
           return acc;
         }, {});
         setUserMap(usersMap);
-        console.log("huntdata", huntData);
-        // Hämta detaljerna om inbjudna användare
-        const huntInvitedUsers = huntData.invitedUsers.map(
-          (userId) => usersMap[userId]
-        );
 
-        setInvitedUsers(huntInvitedUsers);
+        console.log("huntdata HD: ", huntData);
+        
+        // Hämta detaljerna om inbjudna användare
+        // const huntInvitedUsers = huntData.invitedUsers.map(
+        //   (userId) => usersMap[userId]
+        // );
+
+        if (Array.isArray(huntData.invitedUsers)) {
+          const huntInvitedUsers = huntData.invitedUsers.map(
+            (userObj) => usersMap[userObj.id] // Använd userObj.id för att slå upp i usersMap
+          );
+          console.log('huntinvitedUsers HD: ', huntInvitedUsers)
+  
+          // Filtrera ut eventuella undefined-värden som kan uppkomma om användaren inte hittas
+          setInvitedUsers(huntInvitedUsers.filter(user => user !== undefined));
+        } else {
+          setInvitedUsers([]); // Om invitedUsers inte är en array, sätt en tom array
+        }
+
       } catch (error) {
-        console.error("Error fetching hunt details:", error);
+        console.error("Error fetching hunt details HD:", error);
       }
     };
 
