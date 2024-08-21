@@ -17,13 +17,10 @@ const HuntDetails = ({ route }) => {
   const [huntCreator, setHuntCreator] = useState("Okänd skapare")
   const [invitedUsers, setInvitedUsers] = useState([]);
 
-  console.log('inne i hd 1')
 
   useEffect(() => {
     const fetchHuntAndUsers = async () => {
-      console.log('inne i fetchHuntAndUsers 2')
       try {
-        console.log('inne i try 3')
         const huntData = await getHuntById(huntId);
         console.log('huntdata.creator: 4', huntData.creator)
         setHunt(huntData);
@@ -32,7 +29,6 @@ const HuntDetails = ({ route }) => {
 
         const usersMap = allUsers.reduce((acc, user) => {
           acc[user.id] = user;
-          console.log('acc: 5')
           return acc;
         }, {});
         const creator = usersMap[hunt.creator]
@@ -42,7 +38,6 @@ const HuntDetails = ({ route }) => {
           const huntInvitedUsers = huntData.invitedUsers.map(
             (userObj) => usersMap[userObj.id] 
           );
-          console.log('huntinvitedUsers HD: 7', huntInvitedUsers)
   
           setInvitedUsers(huntInvitedUsers.filter(user => user !== undefined));
         } else {

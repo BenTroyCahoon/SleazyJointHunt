@@ -21,7 +21,6 @@ const ConfirmHunt = ({ route }) => {
   const { huntId } = route.params;
 
   useEffect(() => {
-    console.log('confirmGunt ')
     const loadHuntDetails = async () => {
       try {
         const { huntId } = route.params;
@@ -92,7 +91,7 @@ const ConfirmHunt = ({ route }) => {
           <Text style={styles.huntName}>{name}</Text>
           <Text style={styles.huntTime}>Uppskattad tid: </Text>
           <Text style={styles.huntTime}>{time} timmar</Text>
-          <Text style={styles.participants}> Deltagare: </Text>
+          <Text style={styles.participants}>Deltagare: </Text>
           <Text style={styles.participants}>
             {participants.map((user) => user.username).join(", ")}
           </Text>
