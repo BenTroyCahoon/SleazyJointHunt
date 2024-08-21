@@ -3,7 +3,7 @@ import { View, Button, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
 const MapScreen = ({ navigation, route }) => {
-  const { huntName, estimatedTime, iconUri } = route.params;
+  const { huntName, estimatedTime, iconUri, description } = route.params;
   const [markers, setMarkers] = useState([]);
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
@@ -32,6 +32,7 @@ const MapScreen = ({ navigation, route }) => {
       huntName,
       estimatedTime,
       iconUri,
+      description,
       startPoint,
       endPoint,
       markers,

@@ -122,15 +122,16 @@ const ActiveHunts = () => {
   }, []);
 
   const renderItem = ({ item }) => {
-    console.log("item", item.id);
-    const participantIds = [item.creator, ...(item.invitedUsers || [])];
+    const participantIds = [item.creator, ...(item.invitedUsers.map(user => user.id) || [])];
     const participantNames = participantIds.map((id) =>
       users[id] ? users[id].username : "Okänd"
     );
+    const userIds = item.invitedUsers.map(user => user.id);
+
 
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate("ConfirmHunt", { huntId: item.id })} // Navigera till ConfirmHunt och skicka med huntId som parameter
+        onPress={() => navigation.navigate("ConfirmHunt", { huntId: item.id, huntName: item.name, invitedUsers: userIds })} 
         style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}
       >
         <Text style={{ fontSize: 20 }}>{item.name}</Text>

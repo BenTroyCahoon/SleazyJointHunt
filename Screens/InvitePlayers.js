@@ -17,7 +17,7 @@ const InvitePlayers = ({ navigation, route }) => {
     huntName,
     estimatedTime,
     iconUri,
-    userId,
+    description,
     startPoint,
     endPoint,
     markers,
@@ -61,18 +61,16 @@ const InvitePlayers = ({ navigation, route }) => {
 
     const sendInviteTo = Object.keys(selectedUsers);
 
-    //console.log('Selected users: ', selectedUsers)
-
     // Bygg huntData från parametrarna och de valda användarna
     const huntData = {
       creator: ID,
       name: huntName,
+      description: description,
       time: estimatedTime,
-      invitedUsers: sendInviteTo,
-
+      invitedUsers: sendInviteTo.map((userid) => ({ id: userid, completed: false })),
       places: { startPoint, endPoint, markers },
     };
-    //console.log('user ID:', ID)
+    console.log(huntData.invitedUsers)
     try {
       // Skicka huntData och huntImage till backend för att spara
       await storeHunt(huntData, iconUri);

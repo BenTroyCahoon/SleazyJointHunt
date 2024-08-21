@@ -33,17 +33,6 @@ const storeUser = async (user, imageUri = null) => {
   }
 };
 
-const changePic = async (user, imageUri) => {
-  try {
-    // Logik för att byta profilbild om det behövs
-
-    await axios.put(`${rootUrl}/user/${user.id}.json`);
-    console.log(user.id);
-  } catch (error) {
-    console.error("Fel vid uppdatering av användarbild:", error);
-  }
-};
-
 const getUser = async (username) => {
   try {
     const response = await axios.get(`${rootUrl}/user.json`);
@@ -61,20 +50,22 @@ const getUser = async (username) => {
   }
 };
 
-const getUserById = async (id) => {
+const getUserById = async (userId) => {
   try {
-    if (!id) {
+    //console.log('id http: ', userId)
+    if (!userId) {
       throw new Error("ID saknas");
     }
 
-    const response = await axios.get(`${rootUrl}/user/${id}.json`);
+    const response = await axios.get(`${rootUrl}/user/${userId}.json`);
+
     if (response.data) {
-      return { ...response.data, id }; // Returnera användardata med ID
+      return { ...response.data, userId }; // Returnera användardata med ID
     }
     return null;
   } catch (error) {
     console.error(
-      `Fel vid hämtning av användare med ID ${id}:`,
+      `Fel vid hämtning av användare med ID ${userId}:`,
       error.response ? error.response.data : error.message
     );
     throw error;
@@ -182,15 +173,11 @@ const fetchAllHunts = async (userId) => {
 const fetchActiveHunts = async (userId) => {
   try {
     const allHunts = await fetchAllHunts(userId);
-    // console.log('alla hunts: ', allHunts)
-    console.log('user ID från http: ', userId)
-
     const activeHunts = allHunts.filter(hunt => {
-      //console.log("Checking Hunt:", hunt); // För att se vad vi jobbar med
-      //console.log('inbjudna spelare: ', hunt.invitedUsers)
-      return Array.isArray(hunt.invitedUsers) && hunt.invitedUsers.includes(userId);
+      // Kontrollera att hunt.invitedUsers är en array och plocka ut ids
+      const invitedUserIds = hunt.invitedUsers.map(user => user.id);
+      return invitedUserIds.includes(userId);
     });
-
 
     //  const test = allHunts[0].invitedUsers.includes("-O4LX634G8loMBOHGv9M")
     return activeHunts;
