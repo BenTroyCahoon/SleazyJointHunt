@@ -30,6 +30,8 @@ const HomeScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
+  console.log('inne i home')
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>WOOOHOOO hemskärmen är här!</Text>
@@ -45,6 +47,10 @@ const HomeScreen = ({ navigation }) => {
       <Button
         title="Create Hunt"
         onPress={() => navigation.navigate("CreateHunt")}
+      />
+      <Button
+        title="Medals"
+        onPress={() => navigation.navigate("MedalsScreen")}
       />
     </View>
   );

@@ -178,7 +178,6 @@ const fetchActiveHunts = async (userId) => {
       return invitedUserIds.includes(userId);
     });
 
-    //  const test = allHunts[0].invitedUsers.includes("-O4LX634G8loMBOHGv9M")
     return activeHunts;
   } catch (error) {
     console.error("Error fetching active hunts:", error);
@@ -215,6 +214,39 @@ const getHuntById = async (huntId) => {
   }
 };
 
+const getCompletedHuntsForUser = async (userId) => {
+  console.log('inne i getCompletedHuntsForUser')
+  try {
+    // Hämta alla jakter
+    const response = await axios.get(`${rootUrl}/hunts.json`);
+    const hunts = response.data;
+
+    // Hämta alla användare
+    const usersResponse = await axios.get(`${rootUrl}/users.json`);
+    const users = usersResponse.data;
+
+    // Skapa en map av användare för snabb uppslagning
+    const usersMap = Object.entries(users).reduce((acc, [key, user]) => {
+      acc[key] = user;
+      return acc;
+    }, {});
+
+    // Filtrera jakter som är slutförda av användaren
+    const completedHunts = Object.entries(hunts)
+      .map(([key, hunt]) => {
+        const userInvited = hunt.invitedUsers.find(user => user.id === userId);
+        return userInvited && userInvited.completed ? { ...hunt, id: key } : null;
+      })
+      .filter(hunt => hunt !== null);
+
+    return completedHunts;
+  } catch (error) {
+    console.error("Error fetching completed hunts:", error);
+    throw error;
+  }
+};
+
+
 export {
   storeUser,
   getUser,
@@ -226,4 +258,5 @@ export {
   fetchPlannedHunts,
   getHuntById,
   getUserById,
+  getCompletedHuntsForUser,
 };
