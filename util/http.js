@@ -52,8 +52,8 @@ const getUser = async (username) => {
 
 const getUserById = async (userId) => {
   if (!userId) {
-      throw new Error("ID saknas");
-    }
+    throw new Error("ID saknas");
+  }
 
   try {
     const response = await axios.get(`${rootUrl}/user/${userId}.json`);
@@ -215,7 +215,7 @@ const getHuntById = async (huntId) => {
 };
 
 const getCompletedHuntsForUser = async (userId) => {
-  console.log('inne i getCompletedHuntsForUser')
+  console.log("inne i getCompletedHuntsForUser");
   try {
     // Hämta alla jakter
     const response = await axios.get(`${rootUrl}/hunts.json`);
@@ -234,10 +234,14 @@ const getCompletedHuntsForUser = async (userId) => {
     // Filtrera jakter som är slutförda av användaren
     const completedHunts = Object.entries(hunts)
       .map(([key, hunt]) => {
-        const userInvited = hunt.invitedUsers.find(user => user.id === userId);
-        return userInvited && userInvited.completed ? { ...hunt, id: key } : null;
+        const userInvited = hunt.invitedUsers.find(
+          (user) => user.id === userId
+        );
+        return userInvited && userInvited.completed
+          ? { ...hunt, id: key }
+          : null;
       })
-      .filter(hunt => hunt !== null);
+      .filter((hunt) => hunt !== null);
 
     return completedHunts;
   } catch (error) {
@@ -246,6 +250,16 @@ const getCompletedHuntsForUser = async (userId) => {
   }
 };
 
+const updateHuntStatus = async (huntId) => {
+  try {
+    const huntRef = `${rootUrl}/hunts/${huntId}.json`;
+    await axios.patch(huntRef, { status: "finished" });
+    console.log("Hunt status updated successfully");
+  } catch (error) {
+    console.error("Error updating hunt status:", error);
+    throw error;
+  }
+};
 
 export {
   storeUser,
@@ -259,4 +273,5 @@ export {
   getHuntById,
   getUserById,
   getCompletedHuntsForUser,
+  updateHuntStatus,
 };
