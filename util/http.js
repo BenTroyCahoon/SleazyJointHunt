@@ -261,6 +261,20 @@ const updateHuntStatus = async (huntId) => {
   }
 };
 
+const finishHunt = async (huntId) => {
+  try {
+    // Anropa updateHuntStatus för att uppdatera jaktens status
+    await updateHuntStatus(huntId);
+    console.log("Hunt has been marked as finished.");
+
+    // Eventuellt navigera till en annan skärm eller uppdatera UI
+    // Exempelvis:
+    // navigation.navigate('MedalsScreen');
+  } catch (error) {
+    console.error("Error finishing hunt:", error);
+  }
+};
+
 export {
   storeUser,
   getUser,
@@ -274,4 +288,5 @@ export {
   getUserById,
   getCompletedHuntsForUser,
   updateHuntStatus,
+  finishHunt,
 };
