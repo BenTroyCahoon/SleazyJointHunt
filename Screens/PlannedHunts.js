@@ -16,14 +16,11 @@ const PlannedHunts = ({ navigation }) => {
   const [userMap, setUserMap] = useState({});
   const [userName, setUserName] = useState({});
 
-  console.log("dhhudsau");
-
   useEffect(() => {
     const loadHunts = async () => {
       try {
         const username = await AsyncStorage.getItem("username");
-        console.log("Fetched username:", username);
-
+        console.log('username: ', username )
         const fetchedUser = await getUser(username);
         setUserId(fetchedUser.id);
         setUserName(username);
@@ -47,6 +44,7 @@ const PlannedHunts = ({ navigation }) => {
 
   const handleHuntPress = (hunt) => {
     navigation.navigate("HuntDetails", { huntId: hunt.id });
+    console.log('huntId som skickas till HD: ', hunt.id)
   };
 
   const renderItem = ({ item }) => {

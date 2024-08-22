@@ -24,6 +24,7 @@ import HuntDetails from "./Screens/Huntdetails";
 import MapScreen from "./Screens/MapScreen";
 import ConfirmHunt from "./Screens/ConfirmHunt";
 import OnGoingHunts from "./Screens/OnGoingHunts";
+import MedalsScreen from "./Screens/MedalsScreen"
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +61,7 @@ export default function App() {
           <Stack.Screen name="MapScreen" component={MapScreen} />
           <Stack.Screen name="ConfirmHunt" component={ConfirmHunt} />
           <Stack.Screen name="OnGoingHunts" component={OnGoingHunts} />
+          <Stack.Screen name="MedalsScreen" component={MedalsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

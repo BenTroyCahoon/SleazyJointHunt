@@ -14,32 +14,38 @@ import { getHuntById, fetchAllUsers } from "../util/http";
 const HuntDetails = ({ route }) => {
   const { huntId } = route.params;
   const [hunt, setHunt] = useState(null);
-  const [userMap, setUserMap] = useState({});
+  const [huntCreator, setHuntCreator] = useState("Okänd skapare")
   const [invitedUsers, setInvitedUsers] = useState([]);
+
 
   useEffect(() => {
     const fetchHuntAndUsers = async () => {
       try {
         const huntData = await getHuntById(huntId);
+        console.log('huntdata.creator: 4', huntData.creator)
         setHunt(huntData);
 
         const allUsers = await fetchAllUsers();
 
-        // Skapa en map av användare för snabb uppslagning
         const usersMap = allUsers.reduce((acc, user) => {
           acc[user.id] = user;
           return acc;
         }, {});
-        setUserMap(usersMap);
-        console.log("huntdata", huntData);
-        // Hämta detaljerna om inbjudna användare
-        const huntInvitedUsers = huntData.invitedUsers.map(
-          (userId) => usersMap[userId]
-        );
+        const creator = usersMap[hunt.creator]
+        setHuntCreator(creator.username)
 
-        setInvitedUsers(huntInvitedUsers);
+        if (Array.isArray(huntData.invitedUsers)) {
+          const huntInvitedUsers = huntData.invitedUsers.map(
+            (userObj) => usersMap[userObj.id] 
+          );
+  
+          setInvitedUsers(huntInvitedUsers.filter(user => user !== undefined));
+        } else {
+          setInvitedUsers([]); 
+        }
+
       } catch (error) {
-        console.error("Error fetching hunt details:", error);
+        console.error("Error fetching hunt details HD:", error);
       }
     };
 
@@ -57,6 +63,7 @@ const HuntDetails = ({ route }) => {
   const { places, huntImageUrl, name, time } = hunt;
   const { startPoint, markers, endPoint } = places;
 
+
   const latitudeDelta = 0.0922;
   const longitudeDelta = 0.0421;
   const latitudeMid =
@@ -72,7 +79,7 @@ const HuntDetails = ({ route }) => {
           <Text style={styles.title}>{name}</Text>
           <Text style={styles.time}>Tid: {time} timmar</Text>
           <Text style={styles.creator}>
-            Skapad av: {userMap[hunt.creator]?.username || "Okänd skapare"}
+            Skapad av: {huntCreator}
           </Text>
           <Text style={styles.subtitle}>Deltagare:</Text>
           {invitedUsers.length > 0 ? (

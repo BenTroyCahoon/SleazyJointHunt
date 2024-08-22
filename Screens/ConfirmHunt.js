@@ -35,7 +35,7 @@ const ConfirmHunt = ({ route }) => {
         setParticipants(participantData);
       } catch (err) {
         setError("Kunde inte hämta jaktens detaljer.");
-        console.error("Error fetching hunt details:", err);
+        console.error("Error fetching hunt details CH:", err);
       } finally {
         setLoading(false);
       }
@@ -91,7 +91,7 @@ const ConfirmHunt = ({ route }) => {
           <Text style={styles.huntName}>{name}</Text>
           <Text style={styles.huntTime}>Uppskattad tid: </Text>
           <Text style={styles.huntTime}>{time} timmar</Text>
-          <Text style={styles.participants}> Deltagare: </Text>
+          <Text style={styles.participants}>Deltagare: </Text>
           <Text style={styles.participants}>
             {participants.map((user) => user.username).join(", ")}
           </Text>
