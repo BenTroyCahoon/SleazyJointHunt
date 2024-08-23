@@ -250,10 +250,11 @@ const getCompletedHuntsForUser = async (userId) => {
   }
 };
 
-const updateHuntStatus = async (huntId) => {
+const updateHuntStatus = async (huntId, huntDetails ) => {
   try {
     const huntRef = `${rootUrl}/hunts/${huntId}.json`;
-    await axios.patch(huntRef, { status: "finished" });
+
+    await axios.patch(huntRef, huntDetails);
     console.log("Hunt status updated successfully");
   } catch (error) {
     console.error("Error updating hunt status:", error);

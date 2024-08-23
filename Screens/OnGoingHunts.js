@@ -167,18 +167,20 @@
 // };
 
 // export default OnGoingHunts;
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import { View, Text, Alert, Button, ActivityIndicator } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import { getHuntById, updateHuntStatus } from "../util/http"; // Anta att du har en metod för att uppdatera jaktstatus
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OnGoingHunts = ({ route, navigation }) => {
   const [huntDetails, setHuntDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [completedMarkers, setCompletedMarkers] = useState([]);
+  const [userid, setUserid] = useState("")
 
   const { huntId } = route.params;
 
@@ -186,6 +188,7 @@ const OnGoingHunts = ({ route, navigation }) => {
     const fetchHuntDetails = async () => {
       try {
         const details = await getHuntById(huntId);
+        console.log('detaljs: ', details.invitedUsers)
         setHuntDetails(details);
       } catch (err) {
         setError("Kunde inte hämta jaktens detaljer.");
@@ -197,6 +200,23 @@ const OnGoingHunts = ({ route, navigation }) => {
 
     fetchHuntDetails();
   }, [huntId]);
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const userId = await AsyncStorage.getItem("userid")
+        console.log('userId med asynkStorage:', userId)
+        setUserid(userId)
+      } catch (err) {
+        setError("Kunde inte hämta användarend ID.");
+        console.error("Error fetching user ID:", err); //99999
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserId();
+  }, []);
 
   const requestPermissions = async () => {
     const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
@@ -228,8 +248,6 @@ const OnGoingHunts = ({ route, navigation }) => {
         quality: 1,
       });
 
-      console.log("Photo result:", result);
-
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const photoUri = result.assets[0].uri;
 
@@ -246,9 +264,43 @@ const OnGoingHunts = ({ route, navigation }) => {
             (huntDetails.places.markers
               ? huntDetails.places.markers.length
               : 0) +
-              2
+            2
           ) {
-            await updateHuntStatus(huntId, { status: "finished" });
+            console.log("huntDetails", huntDetails);
+            // jobb...
+            // const newInvitedUsers = []
+            const newInvitedUsers = huntDetails.invitedUsers.map((invited) => {
+              if (invited.id === userid) { // Kontrollera att invited.id matchar userid
+                console.log('JAAAAAAAA');
+                return { ...invited, completed: true }; // Uppdatera completed till true
+              } else {
+                return invited; // Lämna andra användare oförändrade
+              }
+            });
+            
+            // Uppdatera huntDetails med den nya listan
+            huntDetails.invitedUsers = newInvitedUsers;
+            
+            // Uppdatera databasen med det nya huntDetails-objektet
+            await updateHuntStatus(huntId, huntDetails);
+            
+            // huntDetails.invitedUsers.forEach((invited) => {
+            //   if (invited === userid) {
+            //     console.log('JAAAAAAAA')
+            //     invited.complete = true
+                
+            //   } else {
+            //     newInvitedUsers.push(invited)
+
+            //   }
+            // })
+            // huntDetails.invitedUsers = newInvitedUsers
+
+            // await updateHuntStatus(huntId, huntDetails);
+
+
+
+
 
             // Visa popup när jakten är avklarad
             Alert.alert("Jakt Avslutad!", "Grattis! Du har slutfört jakten.", [

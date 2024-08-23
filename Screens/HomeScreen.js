@@ -7,7 +7,8 @@ const HomeScreen = ({ navigation }) => {
   useLayoutEffect(() => {
     const areyouloggedin = async () => {
       const userName = await AsyncStorage.getItem("username");
-
+      const userid = await AsyncStorage.getItem("userid");
+      console.log(userid)
       if (userName === null) {
         navigation.navigate("Login");
       }
@@ -25,6 +26,9 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
+
+
+    
     navigation.setOptions({
       headerRight: () => <Button title="Logga ut" onPress={handleLogout} />,
     });

@@ -13,6 +13,8 @@ const LoginScreen = ({ navigation }) => {
       if (user && user.password === password) {
         // console.log("user", user)
         await AsyncStorage.setItem("username", username);
+        await AsyncStorage.setItem("userid", user.id);
+        console.log('inloggad id: ', user.id)
 
         navigation.navigate("Home");
       } else {

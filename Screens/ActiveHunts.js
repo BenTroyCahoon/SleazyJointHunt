@@ -26,13 +26,16 @@ const ActiveHunts = () => {
 
         setCurrentUser(user);
 
+        const userid = await AsyncStorage.getItem("userid");
+        console.log('activehunt: ', userid)
+
         const userHunts = await fetchActiveHunts(user.id);
         const filteredHunts = userHunts.map(hunt => {
           // console.log(`Original Invited Users for Hunt ID ${hunt.id}:`, hunt.invitedUsers);
 
           // Filtrera användare som inte är kompletta
           const incompleteUsers = hunt.invitedUsers.filter(user => {
-            // console.log(`Checking user with ID ${user.id}, completed: ${user.completed}`);
+           console.log(`Checking user with ID ${user.id}, completed: ${user.completed}`);
             return user.completed === false;
           });
 
