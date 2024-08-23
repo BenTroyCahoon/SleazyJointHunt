@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import app from "./fireBaseConfig"; // Importera den initierade Firebase-appen
+import app from "./fireBaseConfig"; 
 
 const storage = getStorage(app);
 const rootUrl =
@@ -57,9 +57,8 @@ const getUserById = async (userId) => {
 
   try {
     const response = await axios.get(`${rootUrl}/user/${userId}.json`);
-    // console.log(`Response för ${userId}: `, response.data)
     if (response.data) {
-      return { ...response.data, userId }; // Returnera användardata med ID
+      return { ...response.data, userId }; 
     }
     return null;
   } catch (error) {
@@ -77,7 +76,6 @@ const updateUserProfileImage = async (userId, imageUri) => {
       throw new Error("Ingen bild att ladda upp.");
     }
 
-    // Ladda upp bilden till Firebase Storage
     const response = await fetch(imageUri);
     const blob = await response.blob();
     const imageRef = ref(storage, `profileImages/${Date.now()}-profile.jpg`);
@@ -93,7 +91,7 @@ const updateUserProfileImage = async (userId, imageUri) => {
       email: currentUserData.email,
       password: currentUserData.password,
       username: currentUserData.username,
-      profileImageUrl: profileImageUrl, // Endast profilbilden uppdateras
+      profileImageUrl: profileImageUrl, 
     });
 
     return profileImageUrl;
@@ -103,7 +101,6 @@ const updateUserProfileImage = async (userId, imageUri) => {
   }
 };
 
-// Hämta alla användare från databasen
 const fetchAllUsers = async () => {
   try {
     const response = await axios.get(`${rootUrl}/user.json`);
@@ -168,12 +165,10 @@ const fetchAllHunts = async (userId) => {
   }
 };
 
-// HÄR JOBBAR DU CARRO
 const fetchActiveHunts = async (userId) => {
   try {
     const allHunts = await fetchAllHunts(userId);
     const activeHunts = allHunts.filter((hunt) => {
-      // Kontrollera att hunt.invitedUsers är en array och plocka ut ids
       const invitedUserIds = hunt.invitedUsers.map((user) => user.id);
       return invitedUserIds.includes(userId);
     });
@@ -194,7 +189,7 @@ const fetchPlannedHunts = async (userId) => {
         ...hunts[key],
         id: key,
       }))
-      .filter((hunt) => hunt.creator === userId); // Filtrerar hunts efter skapare
+      .filter((hunt) => hunt.creator === userId); 
   } catch (error) {
     console.error("Error fetching planned hunts:", error);
     return [];
@@ -214,42 +209,6 @@ const getHuntById = async (huntId) => {
   }
 };
 
-const getCompletedHuntsForUser = async (userId) => {
-  console.log("inne i getCompletedHuntsForUser");
-  try {
-    // Hämta alla jakter
-    const response = await axios.get(`${rootUrl}/hunts.json`);
-    const hunts = response.data;
-
-    // Hämta alla användare
-    const usersResponse = await axios.get(`${rootUrl}/users.json`);
-    const users = usersResponse.data;
-
-    // Skapa en map av användare för snabb uppslagning
-    const usersMap = Object.entries(users).reduce((acc, [key, user]) => {
-      acc[key] = user;
-      return acc;
-    }, {});
-
-    // Filtrera jakter som är slutförda av användaren
-    const completedHunts = Object.entries(hunts)
-      .map(([key, hunt]) => {
-        const userInvited = hunt.invitedUsers.find(
-          (user) => user.id === userId
-        );
-        return userInvited && userInvited.completed
-          ? { ...hunt, id: key }
-          : null;
-      })
-      .filter((hunt) => hunt !== null);
-
-    return completedHunts;
-  } catch (error) {
-    console.error("Error fetching completed hunts:", error);
-    throw error;
-  }
-};
-
 const updateHuntStatus = async (huntId, huntDetails ) => {
   try {
     const huntRef = `${rootUrl}/hunts/${huntId}.json`;
@@ -259,20 +218,6 @@ const updateHuntStatus = async (huntId, huntDetails ) => {
   } catch (error) {
     console.error("Error updating hunt status:", error);
     throw error;
-  }
-};
-
-const finishHunt = async (huntId) => {
-  try {
-    // Anropa updateHuntStatus för att uppdatera jaktens status
-    await updateHuntStatus(huntId);
-    console.log("Hunt has been marked as finished.");
-
-    // Eventuellt navigera till en annan skärm eller uppdatera UI
-    // Exempelvis:
-    // navigation.navigate('MedalsScreen');
-  } catch (error) {
-    console.error("Error finishing hunt:", error);
   }
 };
 
@@ -287,7 +232,5 @@ export {
   fetchPlannedHunts,
   getHuntById,
   getUserById,
-  getCompletedHuntsForUser,
   updateHuntStatus,
-  finishHunt,
 };

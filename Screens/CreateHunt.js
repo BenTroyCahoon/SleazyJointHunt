@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TextInput,
-  Alert,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, Button, TextInput, Alert, Image, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 const CreateHunt = ({ navigation }) => {
@@ -30,7 +21,6 @@ const CreateHunt = ({ navigation }) => {
       return;
     }
 
-    // Välj mellan att öppna kameran eller galleriet
     Alert.alert(
       "Select Image Source",
       "Choose an option to add an icon for your Hunt:",
@@ -76,82 +66,113 @@ const CreateHunt = ({ navigation }) => {
       return;
     }
 
-    // Skicka data som props till nästa skärm
     navigation.navigate("MapScreen", { huntName, estimatedTime, iconUri, description });
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <TextInput
-        placeholder="Customize"
-        style={{ height: 100, fontSize: 50 }}
-      />
+    <View style={styles.container}>
+      <TouchableOpacity
+        onPress={handleImagePicker}
+        style={styles.imagePicker}
+      >
+        <View style={styles.imageContainer}>
+          {iconUri ? (
+            <Image
+              source={{ uri: iconUri }}
+              style={styles.image}
+            />
+          ) : (
+            <Text style={styles.imageText}>Insert Image</Text>
+          )}
+        </View>
+      </TouchableOpacity>
+
       <TextInput
         placeholder="Huntens namn"
         value={huntName}
         onChangeText={setHuntName}
-        style={{
-          height: 50,
-          borderColor: "gray",
-          borderWidth: 1,
-          marginBottom: 20,
-          padding: 10,
-        }}
+        style={styles.input}
       />
       <TextInput
         placeholder="Uppskattad tid"
         value={estimatedTime}
         onChangeText={setEstimatedTime}
         keyboardType="numeric"
-        style={{
-          height: 50,
-          borderColor: "gray",
-          borderWidth: 1,
-          marginBottom: 20,
-          padding: 10,
-        }}
+        style={styles.input}
       />
-           <TextInput
+      <TextInput
         placeholder="Beskrivning"
         value={description}
         onChangeText={setDescription}
-        style={{
-          height: 50,
-          borderColor: "gray",
-          borderWidth: 1,
-          marginBottom: 20,
-          padding: 10,
-        }}
+        style={styles.input}
       />
-
-      <TouchableOpacity
-        onPress={handleImagePicker}
-        style={{ marginBottom: 20 }}
-      >
-        <View
-          style={{
-            height: 100,
-            width: 100,
-            borderWidth: 1,
-            borderColor: "gray",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {iconUri ? (
-            <Image
-              source={{ uri: iconUri }}
-              style={{ height: 100, width: 100 }}
-            />
-          ) : (
-            <Text>Insert Image</Text>
-          )}
-        </View>
-      </TouchableOpacity>
-
-      <Button title="Continue" onPress={handleContinue} />
+      <View style={styles.buttonContainer}>
+        <Button title="Fortsätt" onPress={handleContinue} color="#2C6B2F" />
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#9bc39e",
+    justifyContent: "center"
+  },
+  customizeInput: {
+    height: 100,
+    fontSize: 24,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 20,
+    backgroundColor: "#fff",
+    textAlignVertical: 'top',
+  },
+  input: {
+    height: 50,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 20,
+    backgroundColor: "#fff",
+    fontSize: 16,
+  },
+  imagePicker: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  imageContainer: {
+    height: 100,
+    width: 100,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  image: {
+    height: 100,
+    width: 100,
+    borderRadius: 8,
+  },
+  imageText: {
+    color: "#666",
+    fontSize: 14,
+  },
+  buttonContainer: {
+    marginTop: 20,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  }
+});
 
 export default CreateHunt;

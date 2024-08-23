@@ -1,68 +1,67 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  FlatList,
-  Dimensions,
-  ScrollView,
-} from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { getHuntById, fetchAllUsers } from "../util/http";
 
 const HuntDetails = ({ route }) => {
   const { huntId } = route.params;
   const [hunt, setHunt] = useState(null);
-  const [huntCreator, setHuntCreator] = useState("Okänd skapare")
+  const [huntCreator, setHuntCreator] = useState("Okänd skapare");
   const [invitedUsers, setInvitedUsers] = useState([]);
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHuntAndUsers = async () => {
       try {
         const huntData = await getHuntById(huntId);
-        console.log('huntdata.creator: 4', huntData.creator)
-        setHunt(huntData);
-
         const allUsers = await fetchAllUsers();
 
         const usersMap = allUsers.reduce((acc, user) => {
           acc[user.id] = user;
           return acc;
         }, {});
-        const creator = usersMap[hunt.creator]
-        setHuntCreator(creator.username)
+        const creator = usersMap[huntData.creator];
+        setHuntCreator(creator ? creator.username : "Okänd skapare");
 
         if (Array.isArray(huntData.invitedUsers)) {
           const huntInvitedUsers = huntData.invitedUsers.map(
-            (userObj) => usersMap[userObj.id] 
+            (userObj) => usersMap[userObj.id]
           );
-  
           setInvitedUsers(huntInvitedUsers.filter(user => user !== undefined));
         } else {
-          setInvitedUsers([]); 
+          setInvitedUsers([]);
         }
 
+        setHunt(huntData);
       } catch (error) {
-        console.error("Error fetching hunt details HD:", error);
+        console.error("Error fetching hunt details:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchHuntAndUsers();
   }, [huntId]);
 
-  if (!hunt) {
+  if (loading) {
     return (
-      <View>
-        <Text>Loading hunt details...</Text>
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#ffffff" />
       </View>
     );
   }
 
-  const { places, huntImageUrl, name, time } = hunt;
-  const { startPoint, markers, endPoint } = places;
+  if (!hunt) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Kunde inte hämta jaktinformation.</Text>
+      </View>
+    );
+  }
 
+  const { places, huntImageUrl, name, time, description
+  } = hunt;
+  const { startPoint, markers, endPoint } = places;
 
   const latitudeDelta = 0.0922;
   const longitudeDelta = 0.0421;
@@ -77,10 +76,9 @@ const HuntDetails = ({ route }) => {
         <Image source={{ uri: huntImageUrl }} style={styles.image} />
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{name}</Text>
+          <Text style={styles.description}>Beskrivning: {description}</Text>
           <Text style={styles.time}>Tid: {time} timmar</Text>
-          <Text style={styles.creator}>
-            Skapad av: {huntCreator}
-          </Text>
+          <Text style={styles.creator}>Skapad av: {huntCreator}</Text>
           <Text style={styles.subtitle}>Deltagare:</Text>
           {invitedUsers.length > 0 ? (
             invitedUsers.map((user, index) => (
@@ -126,13 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#9bc39e",
     padding: 20,
   },
-  image: {
-    width: "100%",
-    height: 200,
-    borderRadius: 12,
-    marginBottom: 15,
-  },
-  detailsContainer: {
+  contentContainer: {
     backgroundColor: "#fff",
     borderRadius: 12,
     padding: 20,
@@ -142,9 +134,22 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 5,
   },
+  image: {
+    width: "100%",
+    height: 200,
+    borderRadius: 12,
+    marginBottom: 15,
+  },
+  detailsContainer: {
+    marginBottom: 20,
+  },
   title: {
     fontSize: 28,
     fontWeight: "bold",
+    color: "#275829",
+    marginBottom: 10,
+  }, description: {
+    fontSize: 18,
     color: "#275829",
     marginBottom: 10,
   },
@@ -175,6 +180,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginTop: 15,
   },
+  errorText: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: '#fff',
+  },
 });
 
 export default HuntDetails;
+

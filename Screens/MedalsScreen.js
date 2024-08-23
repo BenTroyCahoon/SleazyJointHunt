@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, Image } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { getUser, getCompletedHuntsForUser, fetchActiveHunts } from "../util/http";
+import { getUser, fetchActiveHunts } from "../util/http";
 
 const MedalsScreen = () => {
     const [userId, setUserId] = useState(null);
@@ -11,25 +11,18 @@ const MedalsScreen = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    //console.log('inne i medals')
-
     useEffect(() => {
         const fetchCompletedHunts = async () => {
             try {
                 const username = await AsyncStorage.getItem("username");
-                //console.log('username: ', username)
-
                 const fetchedUser = await getUser(username);
                 setUserId(fetchedUser.id);
                 setUserName(username);
-                //console.log('userId: ', userId)
-                
+
                 const activeHunts = await fetchActiveHunts(fetchedUser.id)
-                console.log('activeHunts: ', activeHunts)
-                const completed = activeHunts.filter(hunt => 
+                const completed = activeHunts.filter(hunt =>
                     hunt.invitedUsers.some(user => user.id === fetchedUser.id && user.completed)
                 )
-                //console.log('completed: ', completed)
 
                 setCompletedHunts(completed)
             } catch (err) {
@@ -44,15 +37,6 @@ const MedalsScreen = () => {
         fetchCompletedHunts();
     }, []);
 
-    // if (loading) {
-    //     return <Text>Laddar...</Text>;
-    // }
-
-    // if (error) {
-    //     return <Text>{error}</Text>;
-    // }
-
-    
     const renderItem = ({ item }) => (
         <View style={styles.card}>
             <View style={styles.imageContainer}>
@@ -77,8 +61,8 @@ const MedalsScreen = () => {
                 data={completedHunts}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderItem}
-                numColumns={4} // Sätt antal kolumner per rad
-                columnWrapperStyle={styles.row} // Stil för radens wrapper
+                numColumns={4}
+                columnWrapperStyle={styles.row}
             />
         </View>
     );
@@ -122,7 +106,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     row: {
-        justifyContent: 'space-around', // Jämnt fördela utrymme mellan kolumner
+        justifyContent: 'space-around',
     }
 });
 

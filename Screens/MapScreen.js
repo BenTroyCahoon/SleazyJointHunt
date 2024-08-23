@@ -7,24 +7,25 @@ const MapScreen = ({ navigation, route }) => {
   const [markers, setMarkers] = useState([]);
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
+  const [step, setStep] = useState(0);
 
   const handleMapPress = (e) => {
     const { coordinate } = e.nativeEvent;
 
-    if (!startPoint) {
+    if (step === 1) {
       setStartPoint(coordinate);
-      Alert.alert("Start point set!");
-    } else if (!endPoint) {
+      setStep(2);
+    } else if (step === 2) {
       setEndPoint(coordinate);
-      Alert.alert("End point set!");
-    } else {
+      setStep(3);
+    } else if (step === 3) {
       setMarkers([...markers, coordinate]);
     }
   };
 
   const handleContinue = () => {
     if (!startPoint || !endPoint) {
-      Alert.alert("Please set both a start and end point.");
+      Alert.alert("Vänligen sätt ut både start- och slutpunkt.");
       return;
     }
 
@@ -39,6 +40,16 @@ const MapScreen = ({ navigation, route }) => {
     });
   };
 
+  const startProcess = () => {
+    if (step === 0) {
+      Alert.alert(
+        "Sätt ut dina markörer",
+        "Tryck på kartan för att sätta ut startpunkt, slutpunkt och de där emellan.",
+        [{ text: "OK", onPress: () => setStep(1) }]
+      );
+    }
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <MapView
@@ -50,6 +61,7 @@ const MapScreen = ({ navigation, route }) => {
           latitudeDelta: 0.0922, // Zoomnivå
           longitudeDelta: 0.0421, // Zoomnivå
         }}
+        onMapReady={startProcess}
       >
         {startPoint && (
           <Marker coordinate={startPoint} pinColor="green" title="Start" />
@@ -61,7 +73,7 @@ const MapScreen = ({ navigation, route }) => {
           <Marker key={index} coordinate={marker} pinColor="blue" />
         ))}
       </MapView>
-      <Button title="Continue" onPress={handleContinue} />
+      <Button title="Fortsätt" onPress={handleContinue} />
     </View>
   );
 };

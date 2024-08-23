@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Button, TextInput, Alert } from "react-native";
+import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity,  } from "react-native";
 import { storeUser } from "../util/http";
 
 const RegisterScreen = ({ navigation }) => {
@@ -16,7 +16,6 @@ const RegisterScreen = ({ navigation }) => {
 
     const user = { email, username, password,  };
 
-
     try {
       await storeUser(user);
       Alert.alert("Registration successful!");
@@ -24,8 +23,6 @@ const RegisterScreen = ({ navigation }) => {
     } catch (error) {
       Alert.alert("Error storing user:", error.message);
     }
-
-
   };
 
   return (
@@ -36,12 +33,14 @@ const RegisterScreen = ({ navigation }) => {
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        placeholderTextColor="#888"
       />
       <TextInput
         style={styles.input}
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
+        placeholderTextColor="#888"
       />
       <TextInput
         style={styles.input}
@@ -49,6 +48,7 @@ const RegisterScreen = ({ navigation }) => {
         secureTextEntry
         value={password}
         onChangeText={setPassword}
+        placeholderTextColor="#888"
       />
       <TextInput
         style={styles.input}
@@ -56,12 +56,14 @@ const RegisterScreen = ({ navigation }) => {
         secureTextEntry
         value={confirmPassword}
         onChangeText={setConfirmPassword}
+        placeholderTextColor="#888"
       />
-      <Button title="Register" onPress={RegisterHandler} />
-      <Button
-        title="Back to Login"
-        onPress={() => navigation.navigate("Login")}
-      />
+      <TouchableOpacity style={styles.button} onPress={RegisterHandler}>
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Login")}>
+        <Text style={styles.backButtonText}>Back to Login</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -71,18 +73,48 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
+    backgroundColor: "#9bc39e", 
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     marginBottom: 20,
     textAlign: "center",
+    color: "#275829", 
+    fontWeight: "bold",
   },
   input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
+    height: 50,
+    borderColor: "#275829",
+    borderWidth: 2,
+    borderRadius: 10,
     marginBottom: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: "#333", 
+    backgroundColor: "#f2f2f2", 
+  },
+  button: {
+    backgroundColor: "#275829", 
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: "#FFFFFF", 
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  backButton: {
+    backgroundColor: "#4CAF50", 
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  backButtonText: {
+    color: "#FFFFFF", 
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 

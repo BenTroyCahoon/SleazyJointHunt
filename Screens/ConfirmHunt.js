@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Button,
-  Alert,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, Text, Button, Alert, StyleSheet, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { getHuntById, getUserById } from "../util/http"; // Importera getUserById
+import { getHuntById, getUserById } from "../util/http";
 import MapView, { Marker } from "react-native-maps";
 
 const ConfirmHunt = ({ route }) => {
@@ -24,11 +17,9 @@ const ConfirmHunt = ({ route }) => {
     const loadHuntDetails = async () => {
       try {
         const { huntId } = route.params;
-
         const details = await getHuntById(huntId);
         setHuntDetails(details);
 
-        // Hämta användare från invitedUsers som nu är objekt med id
         const participantData = await Promise.all(
           details.invitedUsers.map((user) => getUserById(user.id))
         );
@@ -80,7 +71,7 @@ const ConfirmHunt = ({ route }) => {
     );
   }
 
-  const { name, time, places } = huntDetails;
+  const { name, time, places, description } = huntDetails;
   const { startPoint, endPoint, markers } = places;
 
   return (
@@ -89,6 +80,7 @@ const ConfirmHunt = ({ route }) => {
       <View style={styles.itemContainer}>
         <View style={styles.infoContainer}>
           <Text style={styles.huntName}>{name}</Text>
+          <Text style={styles.huntDescription}>Beskrivning: {description}</Text>
           <Text style={styles.huntTime}>Uppskattad tid: </Text>
           <Text style={styles.huntTime}>{time} timmar</Text>
           <Text style={styles.participants}>Deltagare: </Text>
@@ -173,6 +165,10 @@ const styles = StyleSheet.create({
     color: "#2C6B2F",
     fontWeight: "bold",
     paddingBottom: 5,
+  },
+  huntDescription: {
+    fontSize: 16,
+    color: "#2C6B2F",
   },
   huntTime: {
     fontSize: 16,

@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Image,
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Image, View, Text, FlatList, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchPlannedHunts, getUser, fetchAllUsers } from "../util/http";
 
@@ -48,7 +41,7 @@ const PlannedHunts = ({ navigation }) => {
   };
 
   const renderItem = ({ item }) => {
-    const creatorName = userMap[item.creator] || "Okänd skapare"; // Hämta creator namn från userMap
+    const creatorName = userMap[item.creator] || "Okänd skapare"; 
 
     return (
       <TouchableOpacity
